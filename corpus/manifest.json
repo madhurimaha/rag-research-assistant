@@ -1,0 +1,62 @@
+[
+  {
+    "doc_key": "1908.06606",
+    "filename": "1908.06606.pdf",
+    "n_gold_questions": 10
+  },
+  {
+    "doc_key": "1910.06592",
+    "filename": "1910.06592.pdf",
+    "n_gold_questions": 9
+  },
+  {
+    "doc_key": "1910.03814",
+    "filename": "1910.03814.pdf",
+    "n_gold_questions": 9
+  },
+  {
+    "doc_key": "1902.06843",
+    "filename": "1902.06843.pdf",
+    "n_gold_questions": 9
+  },
+  {
+    "doc_key": "1909.13104",
+    "filename": "1909.13104.pdf",
+    "n_gold_questions": 8
+  },
+  {
+    "doc_key": "1902.09666",
+    "filename": "1902.09666.pdf",
+    "n_gold_questions": 8
+  },
+  {
+    "doc_key": "1910.12574",
+    "filename": "1910.12574.pdf",
+    "n_gold_questions": 8
+  },
+  {
+    "doc_key": "1704.05572",
+    "filename": "1704.05572.pdf",
+    "n_gold_questions": 8
+  },
+  {
+    "doc_key": "1912.01673",
+    "filename": "1912.01673.pdf",
+    "n_gold_questions": 8
+  },
+  {
+    "doc_key": "1809.10644",
+    "filename": "1809.10644.pdf",
+    "n_gold_questions": 8
+  },
+  {
+    "doc_key": "1911.03243",
+    "filename": "1911.03243.pdf",
+    "n_gold_questions": 8
+  },
+  {
+    "doc_key": "1603.01514",
+    "filename": "1603.01514.pdf",
+    "n_gold_questions": 7
+  }
+]

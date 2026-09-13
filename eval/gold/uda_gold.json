@@ -1,0 +1,1034 @@
+[
+  {
+    "q_uid": "1e775cf30784e6b1c2b573294a82e145a3f959bb",
+    "doc_key": "1909.13104",
+    "question": "What language(s) is/are represented in the dataset?",
+    "answers": [
+      "english",
+      "english"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "392fb87564c4f45d0d8d491a9bb217c4fce87f03",
+    "doc_key": "1909.13104",
+    "question": "What baseline model is used?",
+    "answers": [
+      "LastStateRNN, AvgRNN, AttentionRNN",
+      "LastStateRNN, AvgRNN, AttentionRNN"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "203337c15bd1ee05763c748391d295a1f6415b9b",
+    "doc_key": "1909.13104",
+    "question": "Which variation provides the best results on this dataset?",
+    "answers": [
+      "the model with multi-attention mechanism and a projected layer",
+      "Projected Layer"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "d004ca2e999940ac5c1576046e30efa3059832fa",
+    "doc_key": "1909.13104",
+    "question": "What are the different variations of the attention-based approach which are examined?",
+    "answers": [
+      "classic RNN model, avgRNN model, attentionRNN model and multiattention RNN model with and without a projected layer",
+      "four attention mechanisms instead of one, a projection layer for the word embeddings"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "21548433abd21346659505296fb0576e78287a74",
+    "doc_key": "1909.13104",
+    "question": "What dataset is used for this work?",
+    "answers": [
+      "Twitter dataset provided by the organizers",
+      "The dataset from the SociaL Media And Harassment Competition of the ECML PKDD 2019 Conference."
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "f0b2289cb887740f9255909018f400f028b1ef26",
+    "doc_key": "1909.13104",
+    "question": "What types of online harassment are studied?",
+    "answers": [
+      "indirect harassment, sexual and physical harassment",
+      "indirect, physical, sexual"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "51b1142c1d23420dbf6d49446730b0e82b32137c",
+    "doc_key": "1909.13104",
+    "question": "What was the baseline?",
+    "answers": [
+      "LastStateRNN, AvgRNN, AttentionRNN"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "58355e2a782bf145b61ee2a3e0e426119985c179",
+    "doc_key": "1909.13104",
+    "question": "What were the datasets used in this paper?",
+    "answers": [
+      "The dataset from the SociaL Media And Harassment Competition of the ECML PKDD 2019 Conference.",
+      "Twitter dataset provided by organizers containing harassment and non-harassment tweets"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "e35c2fa99d5c84d8cb5d83fca2b434dcd83f3851",
+    "doc_key": "1910.06592",
+    "question": "How did they obtain the dataset?",
+    "answers": [
+      "For the non-factual accounts, we rely on a list of 180 Twitter accounts from BIBREF1, we use a list with another 32 Twitter accounts from BIBREF19 that are considered trustworthy",
+      "public resources where suspicious Twitter accounts were annotated, list with another 32 Twitter accounts from BIBREF19 that are considered trustworthy"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "c00ce1e3be14610fb4e1f0614005911bb5ff0302",
+    "doc_key": "1910.06592",
+    "question": "What activation function do they use in their model?",
+    "answers": [
+      "relu, selu, tanh",
+      "Activation function is hyperparameter. Possible values: relu, selu, tanh."
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "71fe5822d9fccb1cb391c11283b223dc8aa1640c",
+    "doc_key": "1910.06592",
+    "question": "What baselines do they compare to?",
+    "answers": [
+      "LR + Bag-of-words, Tweet2vec, LR + All Features (tweet-level), LR + All Features (chunk-level), FacTweet (tweet-level), Top-$k$ replies, likes, or re-tweets",
+      "Top-$k$ replies, likes, or re-tweets, FacTweet (tweet-level), LR + All Features (chunk-level), LR + All Features (tweet-level), Tweet2vec, LR + Bag-of-words"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "97d0f9a1540a48e0b4d30d7084a8c524dd09a4c3",
+    "doc_key": "1910.06592",
+    "question": "How are chunks defined?",
+    "answers": [
+      "Chunks is group of tweets from single account that  is consecutive in time - idea is that this group can show secret intention of malicious accounts.",
+      "sequence of $s$ tweets"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "1062a0506c3691a93bb914171c2701d2ae9621cb",
+    "doc_key": "1910.06592",
+    "question": "What features are extracted?",
+    "answers": [
+      "Sentiment, Morality, Style, Words embeddings",
+      "15 emotion types, sentiment classes, positive and negative, care, harm, fairness, cheating, loyalty, betrayal, authority, subversion, sanctity, and degradation, count of question marks, exclamation marks, consecutive characters and letters, links, hashtags, users' mentions, uppercase ratio, tweet length, words embeddings"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "483a699563efcb8804e1861b18809279f21c7610",
+    "doc_key": "1910.06592",
+    "question": "Was the approach used in this work to detect fake news fully supervised?",
+    "answers": [
+      "Yes"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "d3ff2986ca8cb85a9a5cec039c266df756947b43",
+    "doc_key": "1910.06592",
+    "question": "Based on this paper, what is the more predictive set of features to detect fake news?",
+    "answers": [
+      "words embeddings, style, and morality features",
+      "words embeddings, style, and morality features"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "2317ca8d475b01f6632537b95895608dc40c4415",
+    "doc_key": "1910.06592",
+    "question": "How is a \"chunk of posts\" defined in this work?",
+    "answers": [
+      "chunk consists of a sorted sequence of tweets labeled by the label of its corresponding account",
+      "sequence of $s$ tweets"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "3e88fb3d28593309a307eb97e875575644a01463",
+    "doc_key": "1910.06592",
+    "question": "What baselines were used in this work?",
+    "answers": [
+      "LR + Bag-of-words, Tweet2vec, LR + All Features (tweet-level), LR + All Features (chunk-level), FacTweet (tweet-level), Top-$k$ replies, likes, or re-tweets",
+      "LR + Bag-of-words, Tweet2vec, LR + All Features (tweet-level), LR + All Features (chunk-level), FacTweet (tweet-level), Top-$k$ replies, likes, or re-tweets"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "8c852fc29bda014d28c3ee5b5a7e449ab9152d35",
+    "doc_key": "1902.09666",
+    "question": "What models are used in the experiment?",
+    "answers": [
+      "linear SVM, bidirectional Long Short-Term-Memory (BiLSTM), Convolutional Neural Network (CNN)",
+      "linear SVM, bidirectional Long Short-Term-Memory (BiLSTM), Convolutional Neural Network (CNN)",
+      "linear SVM trained on word unigrams,  bidirectional Long Short-Term-Memory (BiLSTM),  Convolutional Neural Network (CNN)"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "682e26262abba473412f68cbeb5f69aa3b9968d7",
+    "doc_key": "1902.09666",
+    "question": "What are the differences between this dataset and pre-existing ones?",
+    "answers": [
+      "no prior work has explored the target of the offensive language"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "5daeb8d4d6f3b8543ec6309a7a35523e160437eb",
+    "doc_key": "1902.09666",
+    "question": "In what language are the tweets?",
+    "answers": [
+      "English",
+      "English",
+      "English"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "d015faf0f8dcf2e15c1690bbbe2bf1e7e0ce3751",
+    "doc_key": "1902.09666",
+    "question": "What kinds of offensive content are explored?",
+    "answers": [
+      "non-targeted profanity and swearing, targeted insults such as cyberbullying, offensive content related to ethnicity, gender or sexual orientation, political affiliation, religious belief, and anything belonging to hate speech",
+      "Targeted Insult (TIN): Posts which contain an insult/threat to an individual, group, or others , Untargeted (UNT): Posts containing non-targeted profanity and swearing.",
+      "offensive (OFF) and non-offensive (NOT), targeted (TIN) and untargeted (INT) insults, targets of insults and threats as individual (IND), group (GRP), and other (OTH)"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "55bd59076a49b19d3283af41c5e3ccb875f3eb0c",
+    "doc_key": "1902.09666",
+    "question": "What is the best performing model?",
+    "answers": [
+      "CNN"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "521280a87c43fcdf9f577da235e7072a23f0673e",
+    "doc_key": "1902.09666",
+    "question": "How many annotators participated?",
+    "answers": [
+      "five annotators"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "5a8cc8f80509ea77d8213ed28c5ead501c68c725",
+    "doc_key": "1902.09666",
+    "question": "What is the definition of offensive language?",
+    "answers": [
+      "Most prior work focuses on a different aspect of offensive language such as abusive language BIBREF0 , BIBREF1 , (cyber-)aggression BIBREF2 , (cyber-)bullying BIBREF3 , BIBREF4 , toxic comments INLINEFORM0 , hate speech BIBREF5 , BIBREF6 , BIBREF7 , BIBREF8 , BIBREF9 , BIBREF10 , and offensive language BIBREF11 . Prior work has focused on these aspects of offensive language in Twitter BIBREF3 , BIBREF7 , BIBREF8 , BIBREF11 , Wikipedia comments, and Facebook posts BIBREF2 ."
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "290ee79b5e3872e0496a6a0fc9b103ab7d8f6c30",
+    "doc_key": "1902.09666",
+    "question": "What are the three layers of the annotation scheme?",
+    "answers": [
+      "Level A: Offensive language Detection\n, Level B: Categorization of Offensive Language\n, Level C: Offensive Language Target Identification"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "8748e8f64af57560d124c7b518b853bf2711c13e",
+    "doc_key": "1910.12574",
+    "question": "Do they report results only on English data?",
+    "answers": [
+      "Yes"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "893ec40b678a72760b6802f6abf73b8f487ae639",
+    "doc_key": "1910.12574",
+    "question": "What evidence do the authors present that the model can capture some biases in data annotation and collection?",
+    "answers": [
+      "The authors showed few tweets where neither and implicit hatred content exist but the model was able to discriminate"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "c81f215d457bdb913a5bade2b4283f19c4ee826c",
+    "doc_key": "1910.12574",
+    "question": "Which publicly available datasets are used?",
+    "answers": [
+      "Waseem-dataset, Davidson-dataset,",
+      "Waseem and Hovey BIBREF5, Davidson et al. BIBREF9"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "e101e38efaa4b931f7dd75757caacdc945bb32b4",
+    "doc_key": "1910.12574",
+    "question": "What baseline is used?",
+    "answers": [
+      "Waseem and Hovy BIBREF5, Davidson et al. BIBREF9, Waseem et al. BIBREF10",
+      "Waseem and Hovy BIBREF5, Davidson et al. BIBREF9, and Waseem et al. BIBREF10"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "afb77b11da41cd0edcaa496d3f634d18e48d7168",
+    "doc_key": "1910.12574",
+    "question": "What new fine-tuning methods are presented?",
+    "answers": [
+      "BERT based fine-tuning, Insert nonlinear layers, Insert Bi-LSTM layer, Insert CNN layer",
+      "BERT based fine-tuning, Insert nonlinear layers, Insert Bi-LSTM layer, Insert CNN layer"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "41b2355766a4260f41b477419d44c3fd37f3547d",
+    "doc_key": "1910.12574",
+    "question": "What are the existing biases?",
+    "answers": [
+      "systematic and substantial racial biases, biases from data collection, rules of annotation",
+      "sampling tweets from specific keywords create systematic and substancial racial biases in datasets"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "96a4091f681872e6d98d0efee777d9e820cb8dae",
+    "doc_key": "1910.12574",
+    "question": "What biases does their model capture?",
+    "answers": [
+      "Data annotation biases where tweet containing disrespectful words are annotated as hate or offensive without any presumption about the social context of tweeters"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "81a35b9572c9d574a30cc2164f47750716157fc8",
+    "doc_key": "1910.12574",
+    "question": "What existing approaches do they compare to?",
+    "answers": [
+      "Waseem and Hovy BIBREF5, Davidson et al. BIBREF9, and Waseem et al. BIBREF10",
+      "Waseem and Hovy BIBREF5, Davidson et al. BIBREF9, Waseem et al. BIBREF10"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "6bf5620f295b5243230bc97b340fae6e92304595",
+    "doc_key": "1603.01514",
+    "question": "What baseline model is used?",
+    "answers": [
+      "same baseline as used by lang2011unsupervised",
+      "We use the same baseline as used by lang2011unsupervised which has been shown to be difficult to outperform. This baseline assigns a semantic role to a constituent based on its syntactic function, i.e. the dependency relation to its head."
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "4986f420884f917d1f60d3cea04dc8e64d3b5bf1",
+    "doc_key": "1603.01514",
+    "question": "Which additional latent variables are used in the model?",
+    "answers": [
+      "CLV as a parent of the two corresponding role variables",
+      "crosslingual latent variables"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "747b847d687f703cc20a87877c5b138f26ff137d",
+    "doc_key": "1603.01514",
+    "question": "Which parallel corpora are used?",
+    "answers": [
+      "English (EN) and German (DE) sections of the CoNLL 2009 corpus BIBREF13, EN-DE section of the Europarl corpus BIBREF14",
+      "the English (EN) and German (DE) sections of the CoNLL 2009 corpus BIBREF13 , and EN-DE section of the Europarl corpus BIBREF14"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "111afb77cfbf4c98e0458606378fa63a0e965e36",
+    "doc_key": "1603.01514",
+    "question": "Overall, does having parallel data improve semantic role induction across multiple languages?",
+    "answers": [
+      "No",
+      "No"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "6568a31241167f618ef5ede939053feaa2fb0d7e",
+    "doc_key": "1603.01514",
+    "question": "Do they add one latent variable for each language pair in their Bayesian model?",
+    "answers": [
+      "Yes"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "50cc6c5f2dcf5fb87b56007f6a825fa7c90b64ed",
+    "doc_key": "1603.01514",
+    "question": "What does an individual model consist of?",
+    "answers": [
+      "Bayesian model of garg2012unsupervised as our base monolingual model"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "0fc2b5bc2ead08a6fe0280fb3a47477c6df1587c",
+    "doc_key": "1603.01514",
+    "question": "Do they improve on state-of-the-art semantic role induction?",
+    "answers": [
+      "Yes"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "71a7153e12879defa186bfb6dbafe79c74265e10",
+    "doc_key": "1908.06606",
+    "question": "What data is the language model pretrained on?",
+    "answers": [
+      "Chinese general corpus"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "85d1831c28d3c19c84472589a252e28e9884500f",
+    "doc_key": "1908.06606",
+    "question": "What baselines is the proposed model compared against?",
+    "answers": [
+      "BERT-Base, QANet",
+      "QANet BIBREF39, BERT-Base BIBREF26"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "1959e0ebc21fafdf1dd20c6ea054161ba7446f61",
+    "doc_key": "1908.06606",
+    "question": "How is the clinical text structuring task defined?",
+    "answers": [
+      "Clinical text structuring (CTS) is a critical task for fetching medical research data from electronic health records (EHRs), where structural patient medical data, such as whether the patient has specific symptoms, diseases, or what the tumor size is, how far from the tumor is cut at during the surgery, or what the specific laboratory test result is, are obtained., Unlike the traditional CTS task, our QA-CTS task aims to discover the most related text from original paragraph text.",
+      "CTS is extracting structural data from medical research data (unstructured). Authors define QA-CTS task that aims to discover most related text from original text."
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "77cf4379106463b6ebcb5eb8fa5bb25450fa5fb8",
+    "doc_key": "1908.06606",
+    "question": "What are the specific tasks being unified?",
+    "answers": [
+      "three types of questions, namely tumor size, proximal resection margin and distal resection margin"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "06095a4dee77e9a570837b35fc38e77228664f91",
+    "doc_key": "1908.06606",
+    "question": "Is all text in this dataset a question, or are there unrelated sentences in between questions?",
+    "answers": [
+      "the dataset consists of pathology reports including sentences and questions and answers about tumor size and resection margins so it does include additional sentences"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "19c9cfbc4f29104200393e848b7b9be41913a7ac",
+    "doc_key": "1908.06606",
+    "question": "How many questions are in the dataset?",
+    "answers": [
+      "2,714"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "08a5f8d36298b57f6a4fcb4b6ae5796dc5d944a4",
+    "doc_key": "1908.06606",
+    "question": "How they introduce domain-specific features into pre-trained language model?",
+    "answers": [
+      "integrate clinical named entity information into pre-trained language model"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "975a4ac9773a4af551142c324b64a0858670d06e",
+    "doc_key": "1908.06606",
+    "question": "How big is QA-CTS task dataset?",
+    "answers": [
+      "17,833 sentences, 826,987 characters and 2,714 question-answer pairs"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "326e08a0f5753b90622902bd4a9c94849a24b773",
+    "doc_key": "1908.06606",
+    "question": "How big is dataset of pathology reports collected from Ruijing Hospital?",
+    "answers": [
+      "17,833 sentences, 826,987 characters and 2,714 question-answer pairs"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "bd78483a746fda4805a7678286f82d9621bc45cf",
+    "doc_key": "1908.06606",
+    "question": "What are strong baseline models in specific tasks?",
+    "answers": [
+      "state-of-the-art question answering models (i.e. QANet BIBREF39) and BERT-Base BIBREF26"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "2fffff59e57b8dbcaefb437a6b3434fc137f813b",
+    "doc_key": "1704.05572",
+    "question": "What corpus was the source of the OpenIE extractions?",
+    "answers": [
+      "domain-targeted $~$ 80K sentences and 280 GB of plain text extracted from web pages used by BIBREF6 aristo2016:combining"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "cd1792929b9fa5dd5b1df0ae06fc6aece4c97424",
+    "doc_key": "1704.05572",
+    "question": "Is an entity linking process used?",
+    "answers": [
+      "No"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "65d34041ffa4564385361979a08706b10b92ebc7",
+    "doc_key": "1704.05572",
+    "question": "Are the OpenIE extractions all triples?",
+    "answers": [
+      "No"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "e215fa142102f7f9eeda9c9eb8d2aeff7f2a33ed",
+    "doc_key": "1704.05572",
+    "question": "What method was used to generate the OpenIE extractions?",
+    "answers": [
+      "for each multiple-choice question $(q,A) \\in Q_\\mathit {tr}$ and each choice $a \\in A$ , we use all non-stopword tokens in $q$ and $a$ as an ElasticSearch query against S, take the top 200 hits, run Open IE v4, and aggregate the resulting tuples over all $a \\in A$ and over all questions in $Q_\\mathit {tr}$"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "a8545f145d5ea2202cb321c8f93e75ad26fcf4aa",
+    "doc_key": "1704.05572",
+    "question": "Can the method answer multi-hop questions?",
+    "answers": [
+      "Yes"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "417dabd43d6266044d38ed88dbcb5fdd7a426b22",
+    "doc_key": "1704.05572",
+    "question": "What was the textual source to which OpenIE was applied?",
+    "answers": [
+      "domain-targeted $~$ 80K sentences and 280 GB of plain text extracted from web pages used by BIBREF6 aristo2016:combining"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "fed230cef7c130f6040fb04304a33bbc17ca3a36",
+    "doc_key": "1704.05572",
+    "question": "What OpenIE method was used to generate the extractions?",
+    "answers": [
+      "for each multiple-choice question $(q,A) \\in Q_\\mathit {tr}$ and each choice $a \\in A$ , we use all non-stopword tokens in $q$ and $a$ as an ElasticSearch query against S, take the top 200 hits, run Open IE v4, and aggregate the resulting tuples over all $a \\in A$ and over all questions in $Q_\\mathit {tr}$"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "7917d44e952b58ea066dc0b485d605c9a1fe3dda",
+    "doc_key": "1704.05572",
+    "question": "Is their method capable of multi-hop reasoning?",
+    "answers": [
+      "Yes"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "6976296126e4a5c518e6b57de70f8dc8d8fde292",
+    "doc_key": "1910.03814",
+    "question": "What models do they propose?",
+    "answers": [
+      "Feature Concatenation Model (FCM), Spatial Concatenation Model (SCM), Textual Kernels Model (TKM)"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "b2b0321b0aaf58c3aa9050906ade6ef35874c5c1",
+    "doc_key": "1910.03814",
+    "question": "How large is the dataset?",
+    "answers": [
+      "$150,000$ tweets"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "2e632eb5ad611bbd16174824de0ae5efe4892daf",
+    "doc_key": "1910.03814",
+    "question": "What is author's opinion on why current multimodal models cannot outperform models analyzing only text?",
+    "answers": [
+      "Noisy data, Complexity and diversity of multimodal relations, Small set of multimodal examples"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "d1ff6cba8c37e25ac6b261a25ea804d8e58e09c0",
+    "doc_key": "1910.03814",
+    "question": "What metrics are used to benchmark the results?",
+    "answers": [
+      "F-score, Area Under the ROC Curve (AUC), mean accuracy (ACC), Precision vs Recall plot, ROC curve (which plots the True Positive Rate vs the False Positive Rate)"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "24c0f3d6170623385283dfda7f2b6ca2c7169238",
+    "doc_key": "1910.03814",
+    "question": "How is data collected, manual collection or Twitter api?",
+    "answers": [
+      "Twitter API"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "21a9f1cddd7cb65d5d48ec4f33fe2221b2a8f62e",
+    "doc_key": "1910.03814",
+    "question": "How many tweats does MMHS150k contains, 150000?",
+    "answers": [
+      "$150,000$ tweets"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "a0ef0633d8b4040bf7cdc5e254d8adf82c8eed5e",
+    "doc_key": "1910.03814",
+    "question": "What unimodal detection models were used?",
+    "answers": [
+      "single layer LSTM with a 150-dimensional hidden state for hate / not hate classification"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "b0799e26152197aeb3aa3b11687a6cc9f6c31011",
+    "doc_key": "1910.03814",
+    "question": "What different models for multimodal detection were proposed?",
+    "answers": [
+      "Feature Concatenation Model (FCM), Spatial Concatenation Model (SCM), Textual Kernels Model (TKM)"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "4ce4db7f277a06595014db181342f8cb5cb94626",
+    "doc_key": "1910.03814",
+    "question": "What annotations are available in the dataset - tweat used hate speach or not?",
+    "answers": [
+      "No attacks to any community,  racist, sexist, homophobic, religion based attacks, attacks to other communities"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "a3d83c2a1b98060d609e7ff63e00112d36ce2607",
+    "doc_key": "1912.01673",
+    "question": "How many sentence transformations on average are available per unique sentence in dataset?",
+    "answers": [
+      "27.41 transformation on average of single seed sentence is available in dataset."
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "aeda22ae760de7f5c0212dad048e4984cd613162",
+    "doc_key": "1912.01673",
+    "question": "What annotations are available in the dataset?",
+    "answers": [
+      "For each source sentence, transformation sentences that are transformed according to some criteria (paraphrase, minimal change etc.)"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "d5fa26a2b7506733f3fa0973e2fe3fc1bbd1a12d",
+    "doc_key": "1912.01673",
+    "question": "How are possible sentence transformations represented in dataset, as new sentences?",
+    "answers": [
+      "Yes, as new sentences."
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "18482658e0756d69e39a77f8fcb5912545a72b9b",
+    "doc_key": "1912.01673",
+    "question": "Is this dataset publicly available?",
+    "answers": [
+      "Yes"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "9d336c4c725e390b6eba8bb8fe148997135ee981",
+    "doc_key": "1912.01673",
+    "question": "Are some baseline models trained on this dataset?",
+    "answers": [
+      "Yes"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "016b59daa84269a93ce821070f4f5c1a71752a8a",
+    "doc_key": "1912.01673",
+    "question": "Do they do any analysis of of how the modifications changed the starting set of sentences?",
+    "answers": [
+      "Yes"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "771b373d09e6eb50a74fffbf72d059ad44e73ab0",
+    "doc_key": "1912.01673",
+    "question": "How do they introduce language variation?",
+    "answers": [
+      "we were looking for original and uncommon sentence change suggestions"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "efb52bda7366d2b96545cf927f38de27de3b5b77",
+    "doc_key": "1912.01673",
+    "question": "Do they use external resources to make modifications to sentences?",
+    "answers": [
+      "No"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "97dac7092cf8082a6238aaa35f4b185343b914af",
+    "doc_key": "1902.06843",
+    "question": "What insights into the relationship between demographics and mental health are provided?",
+    "answers": [
+      "either likely depressed-user population is younger, or depressed youngsters are more likely to disclose their age, more women than men were given a diagnosis of depression"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "195611926760d1ceec00bd043dfdc8eba2df5ad1",
+    "doc_key": "1902.06843",
+    "question": "What model is used to achieve 5% improvement on F1 for identifying depressed individuals on Twitter?",
+    "answers": [
+      "Random Forest classifier"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "445e792ce7e699e960e2cb4fe217aeacdd88d392",
+    "doc_key": "1902.06843",
+    "question": "How do this framework facilitate demographic inference from social media?",
+    "answers": [
+      "Demographic information is predicted using weighted lexicon of terms."
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "a3b1520e3da29d64af2b6e22ff15d330026d0b36",
+    "doc_key": "1902.06843",
+    "question": "What types of features are used from each data type?",
+    "answers": [
+      "facial presence, Facial Expression, General Image Features,  textual content, analytical thinking, clout, authenticity, emotional tone, Sixltr,  informal language markers, 1st person singular pronouns"
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "2cf8825639164a842c3172af039ff079a8448592",
+    "doc_key": "1902.06843",
+    "question": "How is the data annotated?",
+    "answers": [
+      "The data are self-reported by Twitter users and then verified by two human experts."
+    ],
+    "source": "uda-qa",
+    "category": "free_form"
+  },
+  {
+    "q_uid": "36b25021464a9574bf449e52ae50810c4ac7b642",
+    "doc_key": "1902.06843",
+    "question": "Where does the information on individual-level demographics come from?",
+    "answers": [
+      "From Twitter profile descriptions of the users."
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "98515bd97e4fae6bfce2d164659cd75e87a9fc89",
+    "doc_key": "1902.06843",
+    "question": "What is the source of the user interaction data?",
+    "answers": [
+      "Sociability from ego-network on Twitter"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "53bf6238baa29a10f4ff91656c470609c16320e1",
+    "doc_key": "1902.06843",
+    "question": "What is the source of the textual data?",
+    "answers": [
+      "Users' tweets"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "b27f7993b1fe7804c5660d1a33655e424cea8d10",
+    "doc_key": "1902.06843",
+    "question": "What is the source of the visual data?",
+    "answers": [
+      "Profile pictures from the Twitter users' profiles."
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "50690b72dc61748e0159739a9a0243814d37f360",
+    "doc_key": "1809.10644",
+    "question": "Do they report results only on English data?",
+    "answers": [
+      "Yes"
+    ],
+    "source": "uda-qa",
+    "category": "yes_no"
+  },
+  {
+    "q_uid": "8266642303fbc6a1138b4e23ee1d859a6f584fbb",
+    "doc_key": "1809.10644",
+    "question": "Which publicly available datasets are used?",
+    "answers": [
+      "BIBREF3, BIBREF4, BIBREF9"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "3685bf2409b23c47bfd681989fb4a763bcab6be2",
+    "doc_key": "1809.10644",
+    "question": "What embedding algorithm and dimension size are used?",
+    "answers": [
+      "300 Dimensional Glove"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "19225e460fff2ac3aebc7fe31fcb4648eda813fb",
+    "doc_key": "1809.10644",
+    "question": "What data are the embeddings trained on?",
+    "answers": [
+      "Common Crawl"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "f37026f518ab56c859f6b80b646d7f19a7b684fa",
+    "doc_key": "1809.10644",
+    "question": "how much was the parameter difference between their model and previous methods?",
+    "answers": [
+      "our model requires 100k parameters , while BIBREF8 requires 250k parameters"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "1231934db6adda87c1b15e571468b8e9d225d6fe",
+    "doc_key": "1809.10644",
+    "question": "how many parameters did their model use?",
+    "answers": [
+      "Excluding the embedding weights, our model requires 100k parameters"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "81303f605da57ddd836b7c121490b0ebb47c60e7",
+    "doc_key": "1809.10644",
+    "question": "which datasets were used?",
+    "answers": [
+      "Sexist/Racist (SR) data set, HATE dataset, HAR"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "118ff1d7000ea0d12289d46430154cc15601fd8e",
+    "doc_key": "1809.10644",
+    "question": "what was the baseline?",
+    "answers": [
+      "logistic regression"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "04f72eddb1fc73dd11135a80ca1cf31e9db75578",
+    "doc_key": "1911.03243",
+    "question": "How much more coverage is in the new dataset?",
+    "answers": [
+      "278 more annotations"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "f74eaee72cbd727a6dffa1600cdf1208672d713e",
+    "doc_key": "1911.03243",
+    "question": "How was coverage measured?",
+    "answers": [
+      "QA pairs per predicate"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "068dbcc117c93fa84c002d3424bafb071575f431",
+    "doc_key": "1911.03243",
+    "question": "How was quality measured?",
+    "answers": [
+      "Inter-annotator agreement, comparison against expert annotation, agreement with PropBank Data annotations."
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "96526a14820b7debfd6f7c5beeade0a854b93d1a",
+    "doc_key": "1911.03243",
+    "question": "How was the corpus obtained?",
+    "answers": [
+      "trained annotators BIBREF4, crowdsourcing BIBREF5"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "32ba4d2d15194e889cbc9aa1d21ff1aa6fa27679",
+    "doc_key": "1911.03243",
+    "question": "How are workers trained?",
+    "answers": [
+      "extensive personal feedback"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "78c010db6413202b4063dc3fb6e3cc59ec16e7e3",
+    "doc_key": "1911.03243",
+    "question": "What is different in the improved annotation protocol?",
+    "answers": [
+      "a trained worker consolidates existing annotations"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "a69af5937cab861977989efd72ad1677484b5c8c",
+    "doc_key": "1911.03243",
+    "question": "How was the previous dataset annotated?",
+    "answers": [
+      "the annotation machinery of BIBREF5"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  },
+  {
+    "q_uid": "8847f2c676193189a0f9c0fe3b86b05b5657b76a",
+    "doc_key": "1911.03243",
+    "question": "How big is the dataset?",
+    "answers": [
+      "1593 annotations"
+    ],
+    "source": "uda-qa",
+    "category": "extractive"
+  }
+]

@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+/**
+ * Design tokens.
+ *
+ * Two ideas carry the visual design:
+ *
+ * 1. Depth comes from surface tone, not borders. The side rails sit on a warm recessed tone and
+ *    the conversation on white; the 1.17:1 step between them reads as an edge without drawing a
+ *    line, so the layout has hierarchy instead of being three equal columns divided by hairlines.
+ * 2. The neutrals are warm rather than blue-grey. Cold greys read clinical at these very low
+ *    saturations; warm ones read considered.
+ *
+ * Every foreground/background pair below was checked against WCAG AA (>= 4.5:1); the worst pair
+ * in the set is 4.60:1. Pick replacements with the same check — several of these colours are used
+ * at 11-12px on tinted fills, where "looks fine on white" is not sufficient.
+ */
+@theme {
+  /* Surfaces, lightest to deepest. */
+  --color-surface: #ffffff; /* conversation, elevated cards */
+  --color-sunken: #f9f7f3; /* tinted blocks inside white (turn footer, input) */
+  --color-rail: #f1ede5; /* side panes — recessed */
+  --color-rail-hover: #e8e2d6;
+
+  --color-border: #e7e2d8; /* used sparingly; tone does most of the separating */
+  --color-border-strong: #cec7b9;
+
+  --color-ink: #1a1815;
+  --color-ink-muted: #57534c;
+  --color-ink-subtle: #655f57;
+
+  --color-accent: #1d4ed8;
+  --color-accent-hover: #1739a8;
+  --color-accent-soft: #e9eefc;
+
+  --color-positive: #0f6d4a;
+  --color-warning: #8a5a00;
+  --color-warning-soft: #fdf6e3;
+  --color-danger: #b3261e;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Two shadows only: one for resting elevation, one for overlays. A soft, wide, low-opacity
+     spread reads as depth; a tight dark shadow reads as a border. */
+  --shadow-raised: 0 1px 2px rgb(26 24 21 / 0.04), 0 8px 24px -12px rgb(26 24 21 / 0.1);
+  --shadow-overlay: 0 4px 12px rgb(26 24 21 / 0.08), 0 24px 56px -16px rgb(26 24 21 / 0.24);
+}
+
+* {
+  min-width: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Visible focus on every interactive element. Never remove without a replacement — keyboard
+   users lose all sense of position. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Blinking caret shown while tokens stream. */
+@keyframes caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.streaming-caret::after {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  background: var(--color-accent);
+  animation: caret 1s step-end infinite;
+}
+
+/* Turns fade in so a new answer doesn't appear as an abrupt jump. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.scroll-area {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+.scroll-area::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.scroll-area::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 6px;
+}

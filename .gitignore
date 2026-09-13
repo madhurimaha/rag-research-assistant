@@ -1,0 +1,20 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+.pytest_cache/
+.ruff_cache/
+node_modules/
+.next/
+dist/
+corpus/*.pdf
+uploads/
+eval/results/answers.json
+.DS_Store
+
+# frontend
+web/node_modules/
+web/.next/
+web/out/
+web/.env.local
+web/next-env.d.ts
