@@ -55,6 +55,10 @@ ollama pull qwen3:8b
 # in .env: LLM_PROVIDER=ollama
 ```
 
+![Chat with citations and the cited PDF](docs/ui-chat.png)
+
+![Document library](docs/ui-library.png)
+
 ---
 
 ## What you can do in the UI
@@ -115,7 +119,7 @@ Failure buckets: 18 retrieval misses, 2 over-abstentions (right doc in context, 
 cd api && PYTHONPATH=. python scripts/run_eval.py --generation   # needs a judge key
 ```
 
-Ragas and Evidently were evaluated and not used as the harness. Ragas 0.4.3 needs the LangChain stack, failed to import on a clean install, and its correctness metric scored 0.0 on all ten real samples because it assumes full-sentence references. Evidently’s strength is production monitoring over time — named below as the path after a local app. Retrieval metrics are exact arithmetic on ranks we already persist; faithfulness follows Ragas’s algorithm (decompose → entail → fraction supported) with versioned prompts we own.
+Ragas and Evidently were considered and not used. Ragas scored 0.0 on span gold because it assumes full-sentence references. Evidently is better for production monitoring. Faithfulness reimplements Ragas’s decompose → entail check with our prompts.
 
 ---
 
@@ -144,6 +148,7 @@ web/              Next.js UI
 data/eval/gold/   100 UDA-QA questions
 data/eval/results/ generated ablation + generation reports
 data/corpus/      PDFs after fetch (gitignored)
+docs/             UI screenshots
 ```
 
 ---
