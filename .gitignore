@@ -7,9 +7,9 @@ __pycache__/
 node_modules/
 .next/
 dist/
-corpus/*.pdf
+data/corpus/*.pdf
 uploads/
-eval/results/answers.json
+data/eval/results/answers.json
 .DS_Store
 
 # frontend

@@ -2,15 +2,6 @@
 
 import type { Citation } from "@/lib/types";
 
-/**
- * Renders a generated answer.
- *
- * The model writes prose but reaches for numbered lists on "list the ..." questions, separating
- * items with blank lines. HTML collapses that whitespace, so rendering the answer as a single
- * paragraph turns a four-item list into one run-on sentence. This does the minimum block-level
- * parsing needed — paragraphs, ordered and unordered lists — rather than pulling in a Markdown
- * renderer, because the citation markers need custom inline handling either way.
- */
 
 export interface ListItem {
   /** The number the model wrote, so rendering never renumbers its list. */

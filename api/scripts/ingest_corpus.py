@@ -7,13 +7,14 @@ import sys
 from pathlib import Path
 
 from app.core.config import get_settings
+from app.core.paths import CORPUS_DIR
 from app.db.pool import connection, init_schema
 from app.rag.ingest import ingest_pdf, mark_failed
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--corpus-dir", default="corpus")
+    ap.add_argument("--corpus-dir", default=str(CORPUS_DIR))
     ap.add_argument("--source", default="seed")
     ap.add_argument("--reset", action="store_true", help="delete all documents first")
     args = ap.parse_args()

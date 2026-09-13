@@ -1,4 +1,4 @@
-"""Run the evaluation and regenerate the reports in `eval/results/`.
+"""Run the evaluation and regenerate the reports in `data/eval/results/`.
 
     python scripts/run_eval.py --retrieval      # ablation sweep, no API key needed
     python scripts/run_eval.py --generation     # answer + score the gold set (judge needs a key)
@@ -20,6 +20,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.core.config import get_settings  # noqa: E402
+from app.core.paths import RESULTS_DIR  # noqa: E402
 from app.eval import harness as H  # noqa: E402
 from app.eval import report as R  # noqa: E402
 
@@ -32,7 +33,7 @@ def main() -> int:
     parser.add_argument("--limit", type=int, default=None, help="first N gold questions (smoke test)")
     parser.add_argument(
         "--answers-out",
-        default=str(Path(__file__).resolve().parents[2] / "eval" / "results" / "answers.json"),
+        default=str(RESULTS_DIR / "answers.json"),
         help="where to dump per-question records for the failure analysis",
     )
     args = parser.parse_args()

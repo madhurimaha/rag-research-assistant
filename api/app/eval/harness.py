@@ -2,7 +2,7 @@
 
 Replaces the ad-hoc script that produced the first ablation table. That table's numbers were real
 but unreproducible, which for a deliverable graded on engineering practice is a defect regardless
-of whether the numbers were right. Every figure in `eval/results/` now comes from here and is
+of whether the numbers were right. Every figure in `data/eval/results/` now comes from here and is
 persisted to `eval_runs` with the config and judge provenance that produced it.
 
 **Retrieval is scored at document level only.** The gold set gives one source document per
@@ -30,14 +30,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from app.core.config import Settings, get_settings
+from app.core.paths import GOLD_PATH, RESULTS_DIR
 from app.db.pool import connection
 from app.eval import metrics as M
 from app.eval.judges import build_client, judge_faithfulness, judge_freeform, judge_metadata
 from app.rag import generation as gen
 from app.rag.retrieval import RetrievalResult, retrieve
-
-GOLD_PATH = Path(__file__).resolve().parents[3] / "eval" / "gold" / "uda_gold.json"
-RESULTS_DIR = Path(__file__).resolve().parents[3] / "eval" / "results"
 
 # The ablation arms, in the order they are reported. Labels match the existing results table.
 ABLATION: list[tuple[str, dict]] = [

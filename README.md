@@ -68,54 +68,6 @@ Starter prompts are on the empty conversation. Try a lookup (“What activation 
 
 ---
 
-## Architecture
-
-```mermaid
-flowchart LR
-  subgraph ui [Next.js]
-    Chat[Chat pane]
-    Sources[Source list]
-    Evidence[Evidence + PDF]
-  end
-
-  subgraph api [FastAPI]
-    Ask["POST /chat/ask SSE"]
-    Docs["/documents"]
-    Explain["GET /chat/:id/explain"]
-  end
-
-  subgraph rag [Retrieval]
-    V[Vector HNSW]
-    L[Lexical tsvector]
-    RRF[RRF fusion]
-    CE[Cross-encoder rerank]
-  end
-
-  PG[(Postgres + pgvector)]
-  LLM[OpenAI / Anthropic / Ollama]
-
-  Chat --> Ask
-  Sources --> Docs
-  Evidence --> Docs
-  Chat --> Explain
-  Ask --> V --> RRF
-  Ask --> L --> RRF
-  RRF --> CE --> Ask
-  V --- PG
-  L --- PG
-  CE --> LLM
-  Ask --> LLM
-  Ask --> PG
-```
-
-Ingestion is extract (PyMuPDF blocks) → paragraph-aware chunks (~320 tokens) → local `bge-small-en-v1.5` embeddings → Postgres. A `CONTEXTUALIZE` flag exists on ingest for Anthropic-style index-time blurbs, but the enrichment module is not in this repo — leave the flag **off**. Hybrid retrieval ranks the stored chunk text either way.
-
-Query path: embed the question locally → hybrid SQL (vector + `websearch_to_tsquery`, fused with RRF, k=60) → cross-encoder rerank of the top 20 → 6 chunks to the generator → streamed answer with citations. Cited chunks from the previous turn are carried forward only when the new question looks like a follow-up.
-
-Why this retrieval, not a framework or a graph: the brief is a 12-document lookup corpus. Hybrid + rerank is the standard production pattern; every rank is stored and shown. LangChain would hide those scores. Graph-based retrieval is a natural next step when questions become thematic or the corpus grows — see [Beyond a local app](#beyond-a-local-app).
-
----
-
 ## Evaluation
 
 Gold set: **100 expert questions** from UDA-QA PaperText over the 12 seed papers (57 extractive, 29 free-form, 14 yes/no). Labels are external, not self-authored.
@@ -133,7 +85,7 @@ Document-level Recall@k on all 100 questions. The index also contains one upload
 | **C — hybrid + rerank, depth 20** | **82%** | **0.68** | **0.71** | **+16, p = 0.0001** |
 | C — depth 50 | 78% | 0.67 | 0.71 | +12 |
 
-Reranking is the win, not hybrid fusion. Depth is non-monotonic: 20 beats 30 and 50 — more candidates give the cross-encoder more chances to promote a plausible wrong chunk. Hybrid is effectively free (32ms vs 26ms). Full table, Wilson intervals, and McNemar tests: [`eval/results/retrieval_ablation.md`](eval/results/retrieval_ablation.md).
+Reranking is the win, not hybrid fusion. Depth is non-monotonic: 20 beats 30 and 50 — more candidates give the cross-encoder more chances to promote a plausible wrong chunk. Hybrid is effectively free (32ms vs 26ms). Full table, Wilson intervals, and McNemar tests: [`data/eval/results/retrieval_ablation.md`](data/eval/results/retrieval_ablation.md).
 
 ```bash
 cd api && PYTHONPATH=. python scripts/run_eval.py --retrieval
@@ -157,7 +109,7 @@ Answered once under the chosen config (`gpt-4.1-mini`, judged by `gpt-5-mini` wh
 
 ~50% span overlap is expected for prose against extractive gold (`english`, `CNN`). Exact match is 0/57. Conditional on the gold document reaching the prompt, extractive recall rises to 0.55. The 18 retrieval misses are fluent, well-cited answers to the *wrong paper* — faithfulness 1.0, correctness 0. That is the metric split working.
 
-Failure buckets: 18 retrieval misses, 2 over-abstentions (right doc in context, still refused), 2 unsupported generations, 28 partially grounded, 0 missing citations. Details: [`eval/results/generation.md`](eval/results/generation.md).
+Failure buckets: 18 retrieval misses, 2 over-abstentions (right doc in context, still refused), 2 unsupported generations, 28 partially grounded, 0 missing citations. Details: [`data/eval/results/generation.md`](data/eval/results/generation.md).
 
 ```bash
 cd api && PYTHONPATH=. python scripts/run_eval.py --generation   # needs a judge key
@@ -189,9 +141,9 @@ api/app/          FastAPI app, RAG pipeline, eval harness
 api/scripts/      fetch_corpus, ingest_corpus, run_eval
 api/tests/        citation parsing, title extraction, eval metrics
 web/              Next.js UI
-eval/gold/        100 UDA-QA questions
-eval/results/     generated ablation + generation reports
-corpus/           PDFs after fetch (gitignored)
+data/eval/gold/   100 UDA-QA questions
+data/eval/results/ generated ablation + generation reports
+data/corpus/      PDFs after fetch (gitignored)
 ```
 
 ---

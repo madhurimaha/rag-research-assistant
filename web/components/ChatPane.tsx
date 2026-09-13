@@ -174,8 +174,11 @@ export function ChatPane({
   onExplain: (turn: Turn) => void;
 }) {
   const [value, setValue] = useState("");
-  const endRef = useRef<HTMLDivElement>(null);
+  const conversationRef = useRef<HTMLDivElement>(null);
+  const followStreamRef = useRef(true);
+  const previousTurnCountRef = useRef(0);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const latestTurn = turns.at(-1);
 
   useLayoutEffect(() => {
     const input = inputRef.current;
@@ -186,13 +189,17 @@ export function ChatPane({
     input.style.overflowY = input.scrollHeight > 128 ? "auto" : "hidden";
   }, [value]);
 
-  useEffect(() => {
-    // Skipped while the transcript is empty: scrolling on mount also moves the browser's
-    // sequential-focus starting point to the end of the document, which sends the user's first
-    // Tab to the composer instead of the skip link.
-    if (turns.length === 0) return;
-    endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
-  }, [turns]);
+  useLayoutEffect(() => {
+    const conversation = conversationRef.current;
+    const addedTurn = turns.length > previousTurnCountRef.current;
+    previousTurnCountRef.current = turns.length;
+    if (addedTurn) followStreamRef.current = true;
+    if (!conversation || (!addedTurn && !followStreamRef.current)) return;
+
+    // Move only the transcript's scrollbar. `scrollIntoView` also scrolls ancestor containers,
+    // and restarting its smooth animation for every streamed token makes the workspace bounce.
+    conversation.scrollTop = conversation.scrollHeight;
+  }, [turns.length, latestTurn?.answer, latestTurn?.streaming]);
 
   function submit() {
     const question = value.trim();
@@ -223,10 +230,17 @@ export function ChatPane({
           announcements until a turn finishes, which is what makes streaming bearable on a
           screen reader. */}
       <div
+        ref={conversationRef}
         className="scroll-area flex-1 overflow-y-auto px-6"
         role="region"
         aria-label="Conversation"
         tabIndex={0}
+        onScroll={(event) => {
+          const region = event.currentTarget;
+          const distanceFromBottom =
+            region.scrollHeight - region.scrollTop - region.clientHeight;
+          followStreamRef.current = distanceFromBottom < 80;
+        }}
       >
         <div className="mx-auto max-w-[46rem]">
           <div role="log" aria-relevant="additions" aria-busy={busy}>
@@ -316,7 +330,6 @@ export function ChatPane({
               </ul>
             </div>
           )}
-          <div ref={endRef} />
         </div>
       </div>
 

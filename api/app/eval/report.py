@@ -1,6 +1,6 @@
 """Markdown report generation.
 
-The reports in `eval/results/` are generated, not hand-maintained. The previous ablation table was
+The reports in `data/eval/results/` are generated, not hand-maintained. The previous ablation table was
 written by hand from a throwaway script, which meant the prose could drift from the numbers and a
 reviewer could not regenerate either. Here the interpretive sentences interpolate the measured
 values — so if a rerun moves a number, the claim moves with it instead of silently going stale.

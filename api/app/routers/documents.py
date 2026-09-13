@@ -17,6 +17,7 @@ from fastapi.responses import FileResponse
 
 from app.core.auth import get_current_user
 from app.core.config import get_settings
+from app.core.paths import CORPUS_DIR
 from app.db.pool import connection
 from app.rag.ingest import ingest_pdf, mark_failed
 from app.schemas.models import DocumentOut
@@ -45,7 +46,7 @@ def list_documents(user: dict = Depends(get_current_user)) -> list[DocumentOut]:
 
 def _pdf_path(filename: str, source: str, user_id: int | None) -> Path:
     if source == "seed":
-        return Path("corpus") / filename
+        return CORPUS_DIR / filename
     # Legacy shared uploads (user_id NULL) live in uploads/; owned files in uploads/{user_id}/.
     if user_id is None:
         return UPLOAD_DIR / filename
@@ -158,9 +159,9 @@ def reingest_seed(
 ) -> dict:
     """Re-ingest the seed corpus — used after toggling CONTEXTUALIZE."""
     settings = get_settings()
-    pdfs = sorted(Path("corpus").glob("*.pdf"))
+    pdfs = sorted(CORPUS_DIR.glob("*.pdf"))
     if not pdfs:
-        raise HTTPException(404, "no seed PDFs found in corpus/")
+        raise HTTPException(404, f"no seed PDFs found in {CORPUS_DIR}")
 
     def run() -> None:
         for pdf in pdfs:

@@ -64,14 +64,20 @@ export const deleteDocument = (id: number) =>
 export async function uploadDocument(file: File): Promise<Document> {
   const body = new FormData();
   body.append("file", file);
-  const res = await fetch(`${API}/documents/upload`, {
-    method: "POST",
-    body,
-    headers: authHeaders(),
-  });
+  let res: Response;
+  try {
+    res = await fetch(`${API}/documents/upload`, {
+      method: "POST",
+      body,
+      headers: authHeaders(),
+    });
+  } catch {
+    throw new Error("Could not reach the API. Is it running on port 8000?");
+  }
   if (!res.ok) {
-    const detail = await res.json().catch(() => ({ detail: res.statusText }));
-    throw new Error(detail.detail ?? "upload failed");
+    const bodyJson = await res.json().catch(() => ({ detail: res.statusText }));
+    const detail = bodyJson.detail;
+    throw new Error(typeof detail === "string" ? detail : "Upload failed");
   }
   return res.json();
 }

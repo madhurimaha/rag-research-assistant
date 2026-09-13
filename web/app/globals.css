@@ -1,20 +1,6 @@
 @import "tailwindcss";
 
-/**
- * Design tokens.
- *
- * Two ideas carry the visual design:
- *
- * 1. Depth comes from surface tone, not borders. The side rails sit on a warm recessed tone and
- *    the conversation on white; the 1.17:1 step between them reads as an edge without drawing a
- *    line, so the layout has hierarchy instead of being three equal columns divided by hairlines.
- * 2. The neutrals are warm rather than blue-grey. Cold greys read clinical at these very low
- *    saturations; warm ones read considered.
- *
- * Every foreground/background pair below was checked against WCAG AA (>= 4.5:1); the worst pair
- * in the set is 4.60:1. Pick replacements with the same check — several of these colours are used
- * at 11-12px on tinted fills, where "looks fine on white" is not sufficient.
- */
+/* Warm tokens. Depth from surface tone, not borders. Pairs meet WCAG AA (worst 4.60:1). */
 @theme {
   /* Surfaces, lightest to deepest. */
   --color-surface: #ffffff; /* conversation, elevated cards */

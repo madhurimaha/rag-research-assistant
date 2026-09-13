@@ -24,6 +24,8 @@ import time
 import urllib.request
 from pathlib import Path
 
+from app.core.paths import CORPUS_DIR, GOLD_DIR
+
 PARQUET_URL = (
     "https://huggingface.co/datasets/qinchuanhui/UDA-QA/"
     "resolve/main/paper_text/test_00000_of_00001.parquet"
@@ -41,8 +43,8 @@ def fetch(url: str, timeout: int = 60) -> bytes:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--n-docs", type=int, default=12)
-    ap.add_argument("--corpus-dir", default="corpus")
-    ap.add_argument("--gold-dir", default="eval/gold")
+    ap.add_argument("--corpus-dir", default=str(CORPUS_DIR))
+    ap.add_argument("--gold-dir", default=str(GOLD_DIR))
     args = ap.parse_args()
 
     corpus_dir = Path(args.corpus_dir)
