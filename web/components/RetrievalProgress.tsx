@@ -47,15 +47,15 @@ export function RetrievalProgress({
     <div role="status" aria-live="polite">
       <ul className="space-y-1">
         {stages.map(([key, ms]) => (
-          <li key={key} className="flex items-center gap-2 text-[12px] text-ink-muted">
+          <li key={key} className="flex items-center gap-2 text-[13px] text-ink-muted">
             <span aria-hidden="true" className="text-positive">
               ✓
             </span>
             {STAGE_LABEL[key]}
-            <span className="font-mono text-[11px] text-ink-subtle">{Math.round(ms)}ms</span>
+            <span className="font-mono text-[12px] text-ink-subtle">{Math.round(ms)}ms</span>
           </li>
         ))}
-        <li className="flex items-center gap-2 text-[12px] text-ink-muted">
+        <li className="flex items-center gap-2 text-[13px] text-ink-muted">
           <span
             aria-hidden="true"
             className="inline-block h-2 w-2 animate-pulse rounded-full bg-accent"

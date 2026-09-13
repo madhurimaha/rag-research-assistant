@@ -4,13 +4,13 @@
 
 Regenerate with `python scripts/run_eval.py --generation`.
 
-## What is required vs what gold made possible
+## Evaluation dimensions
 
-A RAG system can be evaluated without any reference answers. The metrics that do not need gold — retrieval quality, faithfulness to the retrieved context, answer rate, and citation coverage — are the required RAG metrics. They ask: did we find the right source, did we stay inside it, and did we show our work?
+We evaluate retrieval and generation separately so failures can be attributed to the correct stage. Retrieval metrics use UDA-QA’s expert-provided source-document labels. Generation is evaluated for answer coverage against expert reference answers and for faithfulness to the retrieved context. Citation coverage and abstention behavior are reported separately.
 
-Correctness is extra, and it exists only because UDA-QA shipped expert answers. Without that gold set we would not report it: there is nothing to score an answer *against* except the context we already used for faithfulness. We keep it because the labels were given, and we never average it into the required metrics — a 0.5 span-overlap score is not a substitute for 0.91 faithfulness, and the two answer different questions.
+These measures answer different questions: retrieval measures whether the expected source reached the context window; reference-based scoring measures whether the answer covers the expected information; and faithfulness measures whether the generated claims are supported by the retrieved passages. No single score represents overall RAG quality.
 
-## Required: grounding
+## Faithfulness
 
 Faithfulness follows the algorithm Ragas established — decompose the answer into atomic claims, verify each against the retrieved context, score the fraction supported — implemented here so the prompts can be versioned and pinned.
 
@@ -29,7 +29,7 @@ Faithfulness follows the algorithm Ragas established — decompose the answer in
 
 **Judged coverage is reported for the same reason.** Structured-output failures are stochastic and correlate with answer length, so dropping failed rows would preferentially drop the longest answers — the ones most likely to contain an unsupported claim, biasing the mean upward. 9 of 98 answers went unscored here and are counted, not hidden.
 
-## Extra: correctness, because gold was given
+## Answer coverage
 
 The gold set mixes three incompatible question kinds, so they are scored separately and never averaged into one number. A single blended correctness score would combine a token-overlap measure, a binary verdict and a judge rating as though they were the same quantity; Qasper, the upstream source of these annotations, reports per-category for the same reason.
 

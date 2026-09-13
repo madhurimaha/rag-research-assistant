@@ -87,7 +87,7 @@ export function ExplainDialog({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-[rgb(26_24_21/0.36)] p-4 backdrop-blur-[2px]"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-[rgb(26_24_21/0.2)] p-4"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -104,7 +104,7 @@ export function ExplainDialog({
             <h2 id="explain-title" className="text-[15px] font-semibold tracking-[-0.011em]">
               Why this answer
             </h2>
-            <p className="mt-0.5 truncate text-[12px] text-ink-subtle">{question}</p>
+            <p className="mt-0.5 truncate text-[13px] text-ink-subtle">{question}</p>
           </div>
           <button
             ref={closeRef}
@@ -118,7 +118,7 @@ export function ExplainDialog({
         </div>
 
         {config && (
-          <div className="flex flex-wrap gap-x-4 gap-y-1 border-b border-border bg-sunken px-5 py-2.5 text-[12px] text-ink-muted">
+          <div className="flex flex-wrap gap-x-4 gap-y-1 border-b border-border bg-sunken px-5 py-2.5 text-[13px] text-ink-muted">
             <span>
               Retrieval:{" "}
               <strong className="font-semibold">
@@ -177,7 +177,7 @@ export function ExplainDialog({
 
           {rows && SHOW_DIAGNOSTICS && (
             <>
-              <h3 className="mt-6 text-[11px] font-semibold uppercase tracking-wider text-ink-subtle">
+              <h3 className="mt-6 text-[12px] font-semibold uppercase tracking-wider text-ink-subtle">
                 Retrieval diagnostics
               </h3>
               <p className="mt-1.5 mb-3 max-w-[74ch] text-[12.5px] leading-relaxed text-ink-muted">
@@ -189,7 +189,7 @@ export function ExplainDialog({
                   a fixed scale.
                 </span>
               </p>
-              <table className="w-full border-collapse text-[12px]">
+              <table className="w-full border-collapse text-[13px]">
                 <caption className="sr-only">
                   Retrieval candidates with per-stage ranks and scores
                 </caption>
@@ -233,7 +233,7 @@ export function ExplainDialog({
                         )}
                       </td>
                       <td className="max-w-[300px] py-1.5 pr-2">
-                        <span className="font-mono text-[10px] text-ink-subtle">
+                        <span className="font-mono text-[12px] text-ink-subtle">
                           {row.doc_key} p{row.page_start}
                         </span>
                         <span className="block truncate text-ink-muted">
@@ -244,7 +244,7 @@ export function ExplainDialog({
                         {row.vector_rank ? (
                           <>
                             #{row.vector_rank}
-                            <span className="ml-1 text-[10px] text-ink-subtle">
+                            <span className="ml-1 text-[12px] text-ink-subtle">
                               {row.vector_score?.toFixed(3)}
                             </span>
                           </>
@@ -274,7 +274,7 @@ export function ExplainDialog({
                 </tbody>
               </table>
               {rows.length > 25 && (
-                <p className="mt-2 text-[11px] text-ink-subtle">
+                <p className="mt-2 text-[12px] text-ink-subtle">
                   Showing the top 25 of {rows.length} candidates.
                 </p>
               )}

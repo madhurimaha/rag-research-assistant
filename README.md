@@ -43,7 +43,7 @@ npm install
 npm run dev                   # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The header should show a document count and either a model name or **retrieval only**.
+Open [http://localhost:3000](http://localhost:3000). Create an account (email + password). Conversations and uploaded PDFs are per user; the 12 seed papers are shared (`user_id` null). The header should show a document count and either a model name or **retrieval only**.
 
 **Without a key:** sources, ranked evidence, and upload still work. Asking a question returns retrieved passages instead of a generated answer.
 
@@ -61,7 +61,7 @@ ollama pull qwen3:8b
 
 - Ask a question; the answer streams token-by-token with inline citation chips.
 - Click a chip to open the source PDF on that page, with the quoted passage beside it.
-- Upload additional PDFs; they are ingested in the background and join the index.
+- Upload additional PDFs; they are ingested in the background and join *your* index (other accounts cannot see them).
 - Open **Why this answer?** for a plain-language retrieval summary (and, by default, the per-candidate score table).
 
 Starter prompts are on the empty conversation. Try a lookup (“What activation function do they use?”) and a question the corpus cannot answer, to see abstention.
@@ -108,7 +108,7 @@ flowchart LR
   Ask --> PG
 ```
 
-Ingestion is extract (PyMuPDF blocks) → paragraph-aware chunks (~320 tokens) → local `bge-small-en-v1.5` embeddings → Postgres. Contextual retrieval (Anthropic-style index-time blurbs) is implemented and **off** by default (`CONTEXTUALIZE=false`) so the index does not depend on a key.
+Ingestion is extract (PyMuPDF blocks) → paragraph-aware chunks (~320 tokens) → local `bge-small-en-v1.5` embeddings → Postgres. A `CONTEXTUALIZE` flag exists on ingest for Anthropic-style index-time blurbs, but the enrichment module is not in this repo — leave the flag **off**. Hybrid retrieval ranks the stored chunk text either way.
 
 Query path: embed the question locally → hybrid SQL (vector + `websearch_to_tsquery`, fused with RRF, k=60) → cross-encoder rerank of the top 20 → 6 chunks to the generator → streamed answer with citations. Cited chunks from the previous turn are carried forward only when the new question looks like a follow-up.
 
@@ -120,11 +120,7 @@ Why this retrieval, not a framework or a graph: the brief is a 12-document looku
 
 Gold set: **100 expert questions** from UDA-QA PaperText over the 12 seed papers (57 extractive, 29 free-form, 14 yes/no). Labels are external, not self-authored.
 
-Two families of metric, kept separate:
-
-**Required RAG metrics** — no reference answer needed: did we find the right source, stay inside it, and cite it?
-
-**Correctness** — only because UDA-QA shipped expert answers. Without that gold set we would not report it. It is *not* averaged into the required scores.
+We evaluate retrieval and generation separately so a failure can be attributed to the right stage. Retrieval uses UDA-QA’s source-document labels. Generation is scored for coverage against the expert answers and for faithfulness to the retrieved context. Citations and abstention are reported on their own. No single number is overall RAG quality.
 
 ### Retrieval (reproducible, no API key)
 
@@ -147,13 +143,13 @@ cd api && PYTHONPATH=. python scripts/run_eval.py --retrieval
 
 Answered once under the chosen config (`gpt-4.1-mini`, judged by `gpt-5-mini` where a judge is used).
 
-| Required | Value |
+| Faithfulness / citations / abstention | Value |
 | --- | --- |
 | Faithfulness (non-abstentions) | **0.91** (89/98 scored) |
 | Answer rate | 98% |
 | Answers with no citation | 0 |
 
-| Extra (gold given) | n | Mean |
+| Answer coverage (vs expert reference) | n | Mean |
 | --- | --- | --- |
 | Extractive token recall | 57 | 0.48 |
 | Yes/no accuracy | 14 | 0.58 |
@@ -232,38 +228,24 @@ No database or API key required. Coverage is the functions that are easy to get 
 - Upload path with font-size title extraction that ignores arXiv stamps and license banners.
 - Three-pane UI, WCAG AA contrast, keyboard-activatable citations, skip link, `prefers-reduced-motion`.
 - Persisted retrieval traces and a two-audience explanation dialog.
-- A reproducible eval harness: required RAG metrics + correctness because gold existed.
+- Account-based sessions (email + password), per-user conversation history, and per-user uploads. Seed papers stay shared.
+- A reproducible eval harness: retrieval, faithfulness, answer coverage, citations, and abstention, reported separately.
 
 ## What we would add next
 
 - **GPU or hosted rerank** — the CPU cross-encoder is ~1.7s/query and dominates latency.
-- **Fix the remaining 18% retrieval misses** — query rewriting / HyDE for underspecified questions (“What was the baseline?”) that match the wrong paper.
-- **Tighten over-abstention** — two questions had the right document in context and still refused.
 - **Graph-based retrieval** once the corpus is ~1,000 documents *or* eval shows a cluster of thematic / aggregation failures. Keep hybrid for lookups; route global questions down a graph path.
-- **Auth and tenancy** before any shared deployment.
+- **Per-tenant indexes / RLS** if the shared-seed-plus-owned-uploads model is not enough.
 - **A real ingest queue** — today’s worker is in-process.
 
-## Beyond a local app
 
-The brief asks what changes past a laptop. In order of leverage:
-
-1. **Rerank off the request path** — GPU box or Cohere-class API (~10ms). Same model, different hardware.
-2. **Continuous eval** — the same faithfulness and retrieval checks, tracked over time with drift alerts. [Evidently](https://www.evidentlyai.com/llm-guide/rag-evaluation) is the named tool for that job; we did not use it for the one-shot ablation because it cannot re-run our retriever under swept configs.
-3. **Separate ingest from query** — object store for PDFs, a worker pool, HNSW rebuilds off the write path.
-4. **Redis** is already in Compose and only health-checked. First use: cache query embeddings and exact-match answers.
-5. **Multi-tenant Postgres** (row-level `tenant_id` on documents and chunks) once there is more than one user. Auth is a prerequisite, not a UI extra.
-
-At 12 papers, stuffing the corpus into a long-context prompt is a legitimate baseline (~200k tokens). We still retrieve because the brief requires a RAG pipeline and because that is what still works at 1,000 papers. The trade-off is named, not hidden.
-
----
 
 ## Limitations
 
 - Text PDFs only; no OCR.
-- Single user; no auth.
+- Accounts, per-user conversations, and per-user uploads. Seed papers are shared (`user_id` null). Session tokens live in Postgres, not JWT.
 - Document-level retrieval gold, not chunk-level (chunk labels cannot be derived without circularity).
 - One judge, one vendor. Convention prefers two heterogeneous judges.
-- Redis unused beyond `/health`.
 - Seed PDFs are fetched from arXiv at setup and are not redistributed in this repo.
 
 ---

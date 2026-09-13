@@ -95,6 +95,7 @@ WITH vector_arm AS (
            1 - (embedding <=> %(qvec)s::vector) AS score
     FROM chunks
     WHERE embedding IS NOT NULL
+      AND (user_id IS NULL OR user_id = %(user_id)s)
     ORDER BY embedding <=> %(qvec)s::vector
     LIMIT %(per_arm)s
 ),
@@ -104,6 +105,7 @@ lexical_arm AS (
            ts_rank_cd(tsv, query) AS score
     FROM chunks, websearch_to_tsquery('english', %(qtext)s) AS query
     WHERE tsv @@ query
+      AND (user_id IS NULL OR user_id = %(user_id)s)
     ORDER BY ts_rank_cd(tsv, query) DESC
     LIMIT %(per_arm)s
 ),
@@ -143,6 +145,7 @@ SELECT c.id AS chunk_id,
 FROM chunks c
 JOIN documents d ON d.id = c.document_id
 WHERE c.embedding IS NOT NULL
+  AND (c.user_id IS NULL OR c.user_id = %(user_id)s)
 ORDER BY c.embedding <=> %(qvec)s::vector
 LIMIT %(limit)s;
 """
@@ -154,10 +157,13 @@ SELECT c.id AS chunk_id, c.document_id, c.ordinal, c.page_start, c.page_end, c.s
 FROM chunks c
 JOIN documents d ON d.id = c.document_id
 WHERE c.id = ANY(%(ids)s)
+  AND (c.user_id IS NULL OR c.user_id = %(user_id)s)
 """
 
 
-def fetch_candidates(conn, chunk_ids: list[int]) -> list[Candidate]:
+def fetch_candidates(
+    conn, chunk_ids: list[int], *, user_id: int | None = None
+) -> list[Candidate]:
     """Load specific chunks as candidates, bypassing ranking.
 
     Used to carry a previous turn's cited evidence into a follow-up question. Ranking fields stay
@@ -166,7 +172,7 @@ def fetch_candidates(conn, chunk_ids: list[int]) -> list[Candidate]:
     """
     if not chunk_ids:
         return []
-    rows = conn.execute(_BY_ID_SQL, {"ids": chunk_ids}).fetchall()
+    rows = conn.execute(_BY_ID_SQL, {"ids": chunk_ids, "user_id": user_id}).fetchall()
     by_id = {
         r["chunk_id"]: Candidate(
             chunk_id=r["chunk_id"],
@@ -195,6 +201,7 @@ def retrieve(
     use_rerank: bool | None = None,
     top_k: int | None = None,
     carry_forward_chunk_ids: list[int] | None = None,
+    user_id: int | None = None,
 ) -> RetrievalResult:
     """Run retrieval and return ranked candidates plus the trace.
 
@@ -227,6 +234,7 @@ def retrieve(
         "per_arm": settings.candidates_per_arm,
         "rrf_k": settings.rrf_k,
         "limit": settings.candidates_per_arm,
+        "user_id": user_id,
     }
 
     t0 = time.perf_counter()
@@ -292,7 +300,7 @@ def retrieve(
         present = {c.chunk_id for c in context}
         extra = [
             c
-            for c in fetch_candidates(conn, carry_forward_chunk_ids)
+            for c in fetch_candidates(conn, carry_forward_chunk_ids, user_id=user_id)
             if c.chunk_id not in present
         ]
         context = context + extra[: settings.carry_forward_limit]

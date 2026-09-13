@@ -30,7 +30,7 @@ export function SourceList({
 
   return (
     <section className="mt-4 border-t border-border pt-3">
-      <h4 className="text-[11px] font-semibold uppercase tracking-wide text-ink-subtle">
+      <h4 className="text-[12px] font-semibold uppercase tracking-wide text-ink-subtle">
         Sources · {citations.length} {citations.length === 1 ? "passage" : "passages"} from{" "}
         {docCount} {docCount === 1 ? "document" : "documents"}
       </h4>
@@ -46,7 +46,7 @@ export function SourceList({
                     type="button"
                     onClick={() => onCite(c)}
                     title={`${c.title} — page ${c.page_start}`}
-                    className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-accent bg-accent-soft px-1 text-[11px] font-semibold text-accent transition-colors hover:bg-accent hover:text-white"
+                    className="inline-flex h-5 min-w-5 items-center justify-center rounded border border-accent bg-accent-soft px-1 text-[13px] font-semibold text-accent transition-colors hover:bg-accent hover:text-white"
                   >
                     {c.marker}
                     <span className="sr-only">
@@ -55,7 +55,7 @@ export function SourceList({
                   </button>
                 ))}
               </span>
-              <span className="min-w-0 flex-1 text-[12px] leading-[1.45] text-ink-muted">
+              <span className="min-w-0 flex-1 text-[13px] leading-[1.45] text-ink-muted">
                 <span className="line-clamp-2" title={group.title}>
                   {group.title}
                 </span>

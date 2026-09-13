@@ -37,7 +37,7 @@ export function EvidencePane({
           <IconDoc className="h-5 w-5" />
         </span>
         <p className="mt-3 text-[13px] font-medium text-ink-muted">No source open</p>
-        <p className="mt-1 max-w-[26ch] text-[12px] leading-relaxed text-ink-subtle">
+        <p className="mt-1 max-w-[26ch] text-[13px] leading-relaxed text-ink-subtle">
           Select a citation in an answer, or a document on the left, to read the source here.
         </p>
       </div>
@@ -51,7 +51,7 @@ export function EvidencePane({
           <h2 className="truncate text-[13px] font-semibold" title={target.title}>
             {target.title}
           </h2>
-          <p className="mt-0.5 text-[12px] text-ink-subtle">
+          <p className="mt-0.5 text-[13px] text-ink-subtle">
             {citation ? (
               <>
                 Page {citation.page_start}
@@ -75,7 +75,7 @@ export function EvidencePane({
 
       {citation && (
         <blockquote className="mx-4 mb-3 rounded-xl bg-surface px-4 py-3 shadow-raised">
-          <p className="text-[10px] font-semibold uppercase tracking-wider text-accent">
+          <p className="text-[12px] font-semibold uppercase tracking-wider text-accent">
             Cited passage
           </p>
           {/* The accent rule ties the quote to the citation chip that opened it. */}
@@ -102,7 +102,7 @@ export function EvidencePane({
           href={documentFileUrl(target.id, target.page)}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-[12px] text-accent hover:underline"
+          className="inline-flex items-center gap-1.5 text-[13px] text-accent hover:underline"
         >
           <IconExternal className="h-3.5 w-3.5" />
           Open PDF in a new tab

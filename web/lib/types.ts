@@ -78,6 +78,34 @@ export interface StreamDone {
   cited_chunk_ids: number[];
 }
 
+export interface User {
+  id: number;
+  email: string;
+}
+
+export interface ConversationSummary {
+  id: number;
+  title: string | null;
+  created_at: string;
+}
+
+export interface ConversationMessage {
+  id: number;
+  role: "user" | "assistant";
+  content: string;
+  abstained: boolean;
+  latency_ms: number | null;
+  created_at: string;
+  citations: Citation[];
+}
+
+export interface Conversation {
+  id: number;
+  title: string | null;
+  created_at: string;
+  messages: ConversationMessage[];
+}
+
 export interface Health {
   status: string;
   database: boolean;

@@ -89,6 +89,25 @@ export const IconAlert = (p: IconProps) => (
   </Svg>
 );
 
+export const IconMenu = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 7h16M4 12h16M4 17h16" />
+  </Svg>
+);
+
+export const IconPlus = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M12 5v14M5 12h14" />
+  </Svg>
+);
+
+export const IconHistory = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 12a8 8 0 1 0 2.35-5.65L4 8.7" />
+    <path d="M4 4v4.7h4.7M12 8v4l2.5 1.5" />
+  </Svg>
+);
+
 /** Wordmark glyph: stacked pages with a retrieval mark, drawn filled rather than stroked. */
 export const LogoMark = ({ className }: IconProps) => (
   <svg

@@ -1,12 +1,55 @@
-import type { Citation, Document, Health, StreamDone, StreamMeta, TraceRow } from "./types";
+import { authHeaders } from "./session";
+import type {
+  Citation,
+  Conversation,
+  ConversationSummary,
+  Document,
+  Health,
+  StreamDone,
+  StreamMeta,
+  TraceRow,
+  User,
+} from "./types";
 
 const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 async function json<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${API}${path}`, init);
-  if (!res.ok) throw new Error(`${res.status} ${res.statusText} on ${path}`);
+  const headers = authHeaders(init?.headers);
+  const res = await fetch(`${API}${path}`, { ...init, headers });
+  if (res.status === 401) {
+    const err = new Error("unauthorized");
+    err.name = "UnauthorizedError";
+    throw err;
+  }
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({ detail: res.statusText }));
+    throw new Error(typeof body.detail === "string" ? body.detail : res.statusText);
+  }
+  if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
 }
+
+export const signup = (email: string, password: string) =>
+  json<{ token: string; user: User }>("/auth/signup", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+export const login = (email: string, password: string) =>
+  json<{ token: string; user: User }>("/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+export const getMe = () => json<User>("/auth/me");
+
+export const logout = () => json<void>("/auth/logout", { method: "POST" });
+
+export const getConversations = () => json<ConversationSummary[]>("/conversations");
+
+export const getConversation = (id: number) => json<Conversation>(`/conversations/${id}`);
 
 export const getHealth = () => json<Health>("/health");
 export const getDocuments = () => json<Document[]>("/documents");
@@ -16,12 +59,16 @@ export const getExplain = (messageId: number) =>
   );
 
 export const deleteDocument = (id: number) =>
-  fetch(`${API}/documents/${id}`, { method: "DELETE" });
+  fetch(`${API}/documents/${id}`, { method: "DELETE", headers: authHeaders() });
 
 export async function uploadDocument(file: File): Promise<Document> {
   const body = new FormData();
   body.append("file", file);
-  const res = await fetch(`${API}/documents/upload`, { method: "POST", body });
+  const res = await fetch(`${API}/documents/upload`, {
+    method: "POST",
+    body,
+    headers: authHeaders(),
+  });
   if (!res.ok) {
     const detail = await res.json().catch(() => ({ detail: res.statusText }));
     throw new Error(detail.detail ?? "upload failed");
@@ -29,8 +76,8 @@ export async function uploadDocument(file: File): Promise<Document> {
   return res.json();
 }
 
-export const documentFileUrl = (id: number, page?: number) =>
-  `${API}/documents/${id}/file${page ? `#page=${page}` : ""}`;
+export const documentFileUrl = (id: number, page = 1) =>
+  `${API}/documents/${id}/file#page=${page}&view=FitH&navpanes=0`;
 
 export interface AskHandlers {
   onMeta: (meta: StreamMeta) => void;
@@ -54,7 +101,7 @@ export async function ask(
 ): Promise<void> {
   const res = await fetch(`${API}/chat/ask`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: authHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify(body),
     signal,
   });

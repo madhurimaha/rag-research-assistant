@@ -29,16 +29,16 @@
   --color-ink-muted: #57534c;
   --color-ink-subtle: #655f57;
 
-  --color-accent: #1d4ed8;
-  --color-accent-hover: #1739a8;
-  --color-accent-soft: #e9eefc;
+  --color-accent: #6d28d9;
+  --color-accent-hover: #581caa;
+  --color-accent-soft: #f2eafe;
 
   --color-positive: #0f6d4a;
   --color-warning: #8a5a00;
   --color-warning-soft: #fdf6e3;
   --color-danger: #b3261e;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
   /* Two shadows only: one for resting elevation, one for overlays. A soft, wide, low-opacity

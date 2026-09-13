@@ -7,6 +7,7 @@ round-trip as Python lists/numpy arrays without manual casting.
 from collections.abc import Iterator
 from contextlib import contextmanager
 
+import psycopg
 from pgvector.psycopg import register_vector
 from psycopg.rows import dict_row
 from psycopg_pool import ConnectionPool
@@ -50,9 +51,18 @@ def close_pool() -> None:
 
 
 def init_schema() -> None:
-    """Apply schema.sql. Idempotent — every statement is IF NOT EXISTS."""
+    """Apply schema.sql, then any pending files in `migrations/`.
+
+    Uses a raw connection, not the pool. `register_vector` looks up the `vector` type OID, which
+    does not exist until `CREATE EXTENSION vector` in schema.sql has run. Opening the pool first
+    on an empty database fails before that statement can execute.
+    """
     from pathlib import Path
 
+    from app.db.migrate import apply_migrations, run_script
+
+    settings = get_settings()
     sql = (Path(__file__).parent / "schema.sql").read_text()
-    with connection() as conn:
-        conn.execute(sql)
+    with psycopg.connect(settings.database_url, row_factory=dict_row) as conn:
+        run_script(conn, sql)
+        apply_migrations(conn)

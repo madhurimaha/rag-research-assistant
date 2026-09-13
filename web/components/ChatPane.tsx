@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnswerBody } from "@/components/AnswerBody";
 import { RetrievalProgress } from "@/components/RetrievalProgress";
 import { SourceList } from "@/components/SourceList";
 import { IconAlert, IconCheck, IconCopy, IconInsight, IconSend } from "@/components/icons";
+import { sourcesUsedInAnswer } from "@/lib/citations";
 import type { Citation, Health, Turn } from "@/lib/types";
 
 /** Starter prompts, labelled with the behaviour each one exercises. */
@@ -69,7 +70,7 @@ function MetaRow({ turn }: { turn: Turn }) {
   ];
 
   return (
-    <dl className="flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[12px] text-ink-subtle">
+    <dl className="flex flex-wrap items-center gap-x-3.5 gap-y-1 text-[13px] text-ink-subtle">
       {items.map((item) => (
         <div key={item.term} className="flex items-center gap-1" title={item.hint}>
           <dt>{item.term}</dt>
@@ -81,6 +82,49 @@ function MetaRow({ turn }: { turn: Turn }) {
         <dd className="font-mono">{meta.model}</dd>
       </div>
     </dl>
+  );
+}
+
+function TurnFooter({
+  turn,
+  onCite,
+  onExplain,
+}: {
+  turn: Turn;
+  onCite: (c: Citation) => void;
+  onExplain: (t: Turn) => void;
+}) {
+  const cited = sourcesUsedInAnswer(turn.citations, turn.done?.cited_chunk_ids);
+  if (cited.length === 0 && !turn.meta) return null;
+
+  return (
+    <div className="mt-5 rounded-xl bg-sunken px-4 py-3">
+      <SourceList citations={cited} onCite={onCite} />
+      {turn.meta && (
+        <div
+          className={`flex flex-wrap items-center justify-between gap-2 ${
+            cited.length > 0 ? "mt-3 border-t border-border pt-3" : ""
+          }`}
+        >
+          <MetaRow turn={turn} />
+          <div className="flex items-center gap-1">
+            {turn.done && (
+              <>
+                <CopyButton text={turn.answer} />
+                <button
+                  type="button"
+                  onClick={() => onExplain(turn)}
+                  className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] font-medium text-accent transition-colors hover:bg-accent-soft"
+                >
+                  <IconInsight className="h-3.5 w-3.5" />
+                  Why this answer?
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -104,7 +148,7 @@ function CopyButton({ text }: { text: string }) {
           /* clipboard unavailable (insecure origin or denied permission) */
         }
       }}
-      className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[12px] font-medium text-ink-muted transition-colors hover:bg-rail hover:text-ink"
+      className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[13px] font-medium text-ink-muted transition-colors hover:bg-rail hover:text-ink"
     >
       {copied ? <IconCheck className="h-3.5 w-3.5" /> : <IconCopy className="h-3.5 w-3.5" />}
       {copied ? "Copied" : "Copy"}
@@ -116,6 +160,7 @@ export function ChatPane({
   turns,
   health,
   busy,
+  canAsk,
   onAsk,
   onCite,
   onExplain,
@@ -123,6 +168,7 @@ export function ChatPane({
   turns: Turn[];
   health: Health | null;
   busy: boolean;
+  canAsk: boolean;
   onAsk: (question: string) => void;
   onCite: (c: Citation) => void;
   onExplain: (turn: Turn) => void;
@@ -130,6 +176,15 @@ export function ChatPane({
   const [value, setValue] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  useLayoutEffect(() => {
+    const input = inputRef.current;
+    if (!input) return;
+    input.style.height = "auto";
+    const nextHeight = Math.min(input.scrollHeight, 128);
+    input.style.height = `${nextHeight}px`;
+    input.style.overflowY = input.scrollHeight > 128 ? "auto" : "hidden";
+  }, [value]);
 
   useEffect(() => {
     // Skipped while the transcript is empty: scrolling on mount also moves the browser's
@@ -141,7 +196,7 @@ export function ChatPane({
 
   function submit() {
     const question = value.trim();
-    if (!question || busy) return;
+    if (!question || busy || !canAsk) return;
     onAsk(question);
     setValue("");
     inputRef.current?.focus();
@@ -152,7 +207,7 @@ export function ChatPane({
       {health && !health.generation_enabled && (
         <div
           role="status"
-          className="flex items-start gap-2 border-b border-border bg-warning-soft px-6 py-2.5 text-[12px] text-warning"
+          className="flex items-start gap-2 border-b border-border bg-warning-soft px-6 py-2.5 text-[13px] text-warning"
         >
           <IconAlert className="mt-px h-4 w-4 shrink-0" />
           <p>
@@ -198,7 +253,7 @@ export function ChatPane({
                   ) : (
                     <>
                       {turn.done?.abstained && (
-                        <p className="mb-3 inline-flex items-center gap-1.5 rounded-md bg-warning-soft px-2 py-1 text-[12px] font-medium text-warning">
+                        <p className="mb-3 inline-flex items-center gap-1.5 rounded-md bg-warning-soft px-2 py-1 text-[13px] font-medium text-warning">
                           <IconAlert className="h-3.5 w-3.5" />
                           Not answerable from these documents
                         </p>
@@ -221,38 +276,9 @@ export function ChatPane({
                       )}
 
                       {/* Sources and diagnostics sit in a sunken block so they read as apparatus
-                          attached to the answer rather than part of it. */}
-                      {(turn.citations.length > 0 || turn.meta) && (
-                        <div className="mt-5 rounded-xl bg-sunken px-4 py-3">
-                          <SourceList citations={turn.citations} onCite={onCite} />
-                          {turn.meta && (
-                            <div
-                              className={`flex flex-wrap items-center justify-between gap-2 ${
-                                turn.citations.length > 0
-                                  ? "mt-3 border-t border-border pt-3"
-                                  : ""
-                              }`}
-                            >
-                              <MetaRow turn={turn} />
-                              <div className="flex items-center gap-1">
-                                {turn.done && (
-                                  <>
-                                    <CopyButton text={turn.answer} />
-                                    <button
-                                      type="button"
-                                      onClick={() => onExplain(turn)}
-                                      className="inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[12px] font-medium text-accent transition-colors hover:bg-accent-soft"
-                                    >
-                                      <IconInsight className="h-3.5 w-3.5" />
-                                      Why this answer?
-                                    </button>
-                                  </>
-                                )}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                          attached to the answer rather than part of it. After `done`, only
+                          passages the model cited — retrieval can send more context than that. */}
+                      <TurnFooter turn={turn} onCite={onCite} onExplain={onExplain} />
                     </>
                   )}
                 </div>
@@ -263,7 +289,7 @@ export function ChatPane({
           {turns.length === 0 && (
             <div className="py-10">
               <h2 className="text-[22px] font-semibold tracking-[-0.014em]">
-                Ask the corpus a question
+                Ask your documents a question
               </h2>
               <p className="mt-2 max-w-[46ch] text-[14px] leading-relaxed text-ink-muted">
                 Answers come only from the indexed papers, with a citation for every claim. If
@@ -275,9 +301,10 @@ export function ChatPane({
                     <button
                       type="button"
                       onClick={() => onAsk(s.text)}
-                      className="group w-full rounded-xl bg-sunken px-4 py-3 text-left transition-colors hover:bg-rail"
+                      disabled={!canAsk}
+                      className="group w-full rounded-xl bg-sunken px-4 py-3 text-left transition-colors hover:bg-rail disabled:cursor-not-allowed disabled:opacity-50"
                     >
-                      <span className="block text-[11px] font-medium uppercase tracking-wide text-ink-subtle">
+                      <span className="block text-[12px] font-medium uppercase tracking-wide text-ink-subtle">
                         {s.label}
                       </span>
                       <span className="mt-1 block text-[14px] text-ink group-hover:text-accent">
@@ -320,20 +347,21 @@ export function ChatPane({
                   submit();
                 }
               }}
-              placeholder="Ask about the indexed papers…"
+              placeholder={canAsk ? "Ask about the indexed papers…" : "Waiting for a document to finish indexing…"}
+              disabled={!canAsk}
               aria-describedby="ask-hint"
-              className="max-h-32 flex-1 resize-none bg-transparent px-2 py-1.5 text-[14px] leading-relaxed outline-none placeholder:text-ink-subtle"
+              className="max-h-32 min-h-9 flex-1 resize-none overflow-y-hidden bg-transparent px-2 py-1.5 text-[14px] leading-relaxed outline-none placeholder:text-ink-subtle"
             />
             <button
               type="submit"
-              disabled={busy || !value.trim()}
+              disabled={busy || !canAsk || !value.trim()}
               className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-accent px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-35"
             >
               {busy ? "Thinking…" : "Ask"}
               {!busy && <IconSend className="h-4 w-4" />}
             </button>
           </div>
-          <p id="ask-hint" className="mt-1.5 px-1 text-[12px] text-ink-subtle">
+          <p id="ask-hint" className="mt-1.5 px-1 text-[13px] text-ink-subtle">
             Enter to send, Shift+Enter for a new line. Follow-ups reuse the previous answer’s
             sources.
           </p>

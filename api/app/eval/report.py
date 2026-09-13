@@ -215,25 +215,25 @@ def write_generation_report(
     w("Regenerate with `python scripts/run_eval.py --generation`.")
     w("")
 
-    w("## What is required vs what gold made possible")
+    w("## Evaluation dimensions")
     w("")
     w(
-        "A RAG system can be evaluated without any reference answers. The metrics that do not "
-        "need gold — retrieval quality, faithfulness to the retrieved context, answer rate, and "
-        "citation coverage — are the required RAG metrics. They ask: did we find the right "
-        "source, did we stay inside it, and did we show our work?"
+        "We evaluate retrieval and generation separately so failures can be attributed to the "
+        "correct stage. Retrieval metrics use UDA-QA’s expert-provided source-document labels. "
+        "Generation is evaluated for answer coverage against expert reference answers and for "
+        "faithfulness to the retrieved context. Citation coverage and abstention behavior are "
+        "reported separately."
     )
     w("")
     w(
-        "Correctness is extra, and it exists only because UDA-QA shipped expert answers. "
-        "Without that gold set we would not report it: there is nothing to score an answer "
-        "*against* except the context we already used for faithfulness. We keep it because the "
-        "labels were given, and we never average it into the required metrics — a 0.5 span-overlap "
-        "score is not a substitute for 0.91 faithfulness, and the two answer different questions."
+        "These measures answer different questions: retrieval measures whether the expected "
+        "source reached the context window; reference-based scoring measures whether the answer "
+        "covers the expected information; and faithfulness measures whether the generated claims "
+        "are supported by the retrieved passages. No single score represents overall RAG quality."
     )
     w("")
 
-    w("## Required: grounding")
+    w("## Faithfulness")
     w("")
     f = summary["faithfulness"]
     w(
@@ -271,7 +271,7 @@ def write_generation_report(
     )
     w("")
 
-    w("## Extra: correctness, because gold was given")
+    w("## Answer coverage")
     w("")
     w(
         "The gold set mixes three incompatible question kinds, so they are scored separately and "

@@ -26,8 +26,10 @@ def health() -> HealthOut:
         with connection() as conn:
             row = conn.execute(
                 """
-                SELECT (SELECT count(*) FROM documents WHERE status = 'ready') AS documents,
-                       (SELECT count(*) FROM chunks WHERE embedding IS NOT NULL) AS chunks
+                SELECT (SELECT count(*) FROM documents
+                          WHERE status = 'ready' AND user_id IS NULL) AS documents,
+                       (SELECT count(*) FROM chunks
+                          WHERE embedding IS NOT NULL AND user_id IS NULL) AS chunks
                 """
             ).fetchone()
             documents, chunks = row["documents"], row["chunks"]

@@ -44,9 +44,30 @@ class AskRequest(BaseModel):
     use_rerank: bool | None = None
 
 
+class SignupRequest(BaseModel):
+    email: str = Field(min_length=3, max_length=254)
+    password: str = Field(min_length=8, max_length=200)
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class UserOut(BaseModel):
+    id: int
+    email: str
+
+
+class AuthOut(BaseModel):
+    token: str
+    user: UserOut
+
+
 class CitationOut(BaseModel):
     marker: int
     chunk_id: int
+    document_id: int
     doc_key: str
     title: str
     page_start: int

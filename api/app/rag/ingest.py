@@ -4,7 +4,8 @@ Idempotent on `doc_key`: re-ingesting a document replaces its chunks rather than
 them, so a failed run can simply be retried.
 
 Contextualisation is a flagged stage. It is the only part of ingestion that needs an LLM, and
-disabling it must leave a fully working index — see `app/rag/contextualize.py`.
+disabling it must leave a fully working index. The enrichment module is not shipped; keep
+`CONTEXTUALIZE=false`.
 """
 
 from __future__ import annotations
@@ -34,6 +35,7 @@ def ingest_pdf(
     *,
     doc_key: str | None = None,
     source: str = "upload",
+    user_id: int | None = None,
     settings: Settings | None = None,
 ) -> IngestReport:
     settings = settings or get_settings()
@@ -54,9 +56,23 @@ def ingest_pdf(
 
     row = conn.execute(
         """
-        INSERT INTO documents (doc_key, title, filename, source, n_pages, status, bytes)
-        VALUES (%s, %s, %s, %s, %s, 'parsing', %s)
-        ON CONFLICT (doc_key) DO UPDATE
+        INSERT INTO documents (doc_key, title, filename, source, n_pages, status, bytes, user_id)
+        VALUES (%s, %s, %s, %s, %s, 'parsing', %s, %s)
+        ON CONFLICT (doc_key) WHERE user_id IS NULL DO UPDATE
+            SET title = EXCLUDED.title,
+                filename = EXCLUDED.filename,
+                source = EXCLUDED.source,
+                n_pages = EXCLUDED.n_pages,
+                status = 'parsing',
+                error = NULL,
+                bytes = EXCLUDED.bytes
+        RETURNING id
+        """
+        if user_id is None
+        else """
+        INSERT INTO documents (doc_key, title, filename, source, n_pages, status, bytes, user_id)
+        VALUES (%s, %s, %s, %s, %s, 'parsing', %s, %s)
+        ON CONFLICT (user_id, doc_key) WHERE user_id IS NOT NULL DO UPDATE
             SET title = EXCLUDED.title,
                 filename = EXCLUDED.filename,
                 source = EXCLUDED.source,
@@ -66,7 +82,7 @@ def ingest_pdf(
                 bytes = EXCLUDED.bytes
         RETURNING id
         """,
-        (doc_key, title, pdf_path.name, source, len(pages), pdf_path.stat().st_size),
+        (doc_key, title, pdf_path.name, source, len(pages), pdf_path.stat().st_size, user_id),
     ).fetchone()
     document_id = row["id"]
 
@@ -98,13 +114,14 @@ def ingest_pdf(
     with conn.cursor() as cur:
         cur.executemany(
             """
-            INSERT INTO chunks (document_id, ordinal, page_start, page_end, section,
+            INSERT INTO chunks (document_id, user_id, ordinal, page_start, page_end, section,
                                 raw_content, content, context_note, n_tokens, embedding)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
             """,
             [
                 (
                     document_id,
+                    user_id,
                     chunk.ordinal,
                     chunk.page_start,
                     chunk.page_end,
@@ -140,8 +157,20 @@ def ingest_pdf(
     )
 
 
-def mark_failed(conn, doc_key: str, error: str) -> None:
-    conn.execute(
-        "UPDATE documents SET status = 'failed', error = %s WHERE doc_key = %s",
-        (error[:2000], doc_key),
-    )
+def mark_failed(conn, doc_key: str, error: str, *, user_id: int | None = None) -> None:
+    if user_id is None:
+        conn.execute(
+            """
+            UPDATE documents SET status = 'failed', error = %s
+             WHERE doc_key = %s AND user_id IS NULL
+            """,
+            (error[:2000], doc_key),
+        )
+    else:
+        conn.execute(
+            """
+            UPDATE documents SET status = 'failed', error = %s
+             WHERE doc_key = %s AND user_id = %s
+            """,
+            (error[:2000], doc_key, user_id),
+        )

@@ -1,13 +1,4 @@
--- RAG Research Assistant — schema
---
--- Design notes:
---  * pgvector HNSW (cosine) is the vector arm; a generated tsvector + GIN is the lexical arm.
---    Both live in the same table so hybrid fusion is one query with no cross-store join.
---  * chunks.content is the *retrieval* text (optionally contextualised); chunks.raw_content is
---    always the original PDF text. Keeping both means the contextualisation flag is reversible
---    and the UI can always show a reader the true source text rather than an LLM rewrite.
---  * Retrieval traces are persisted, not just logged, because the explainability panel needs to
---    replay exactly how a stored answer was produced.
+
 
 CREATE EXTENSION IF NOT EXISTS vector;
 
@@ -15,7 +6,7 @@ CREATE EXTENSION IF NOT EXISTS vector;
 
 CREATE TABLE IF NOT EXISTS documents (
     id            BIGSERIAL PRIMARY KEY,
-    doc_key       TEXT UNIQUE NOT NULL,          -- stable external id (e.g. arXiv id)
+    doc_key       TEXT NOT NULL,                 -- stable external id (e.g. arXiv id); uniqueness is per-tenant below
     title         TEXT NOT NULL,
     filename      TEXT NOT NULL,
     source        TEXT NOT NULL DEFAULT 'upload', -- 'seed' | 'upload'
@@ -57,13 +48,57 @@ CREATE INDEX IF NOT EXISTS chunks_tsv_gin ON chunks USING gin (tsv);
 
 CREATE INDEX IF NOT EXISTS chunks_document_id ON chunks (document_id);
 
+-- ---------------------------------------------------------------- users
+-- Local email/password accounts. Conversations, uploaded documents, and their chunks
+-- carry user_id. Seed papers keep user_id NULL so every account still searches them.
+
+CREATE TABLE IF NOT EXISTS users (
+    id             BIGSERIAL PRIMARY KEY,
+    email          TEXT NOT NULL UNIQUE,
+    password_hash  TEXT NOT NULL,
+    created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+    token       TEXT PRIMARY KEY,
+    user_id     BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    expires_at  TIMESTAMPTZ NOT NULL,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX IF NOT EXISTS sessions_user_id ON sessions (user_id);
+
+-- Document tenancy: seed papers stay user_id NULL (shared). Uploads belong to an account.
+-- Conversations already have user_id. This is the matching column on the index, not another
+-- login page. Partial uniques: one shared doc_key, and one (user_id, doc_key) per owner.
+ALTER TABLE documents ADD COLUMN IF NOT EXISTS user_id BIGINT REFERENCES users(id) ON DELETE CASCADE;
+ALTER TABLE chunks ADD COLUMN IF NOT EXISTS user_id BIGINT REFERENCES users(id) ON DELETE CASCADE;
+
+ALTER TABLE documents DROP CONSTRAINT IF EXISTS documents_doc_key_key;
+
+CREATE UNIQUE INDEX IF NOT EXISTS documents_shared_doc_key
+    ON documents (doc_key)
+    WHERE user_id IS NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS documents_owned_doc_key
+    ON documents (user_id, doc_key)
+    WHERE user_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS documents_user_id ON documents (user_id);
+CREATE INDEX IF NOT EXISTS chunks_user_id ON chunks (user_id);
+
 -- ---------------------------------------------------------------- conversations
 
 CREATE TABLE IF NOT EXISTS conversations (
     id            BIGSERIAL PRIMARY KEY,
+    user_id       BIGINT REFERENCES users(id) ON DELETE CASCADE,
     title         TEXT,
     created_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
+
+ALTER TABLE conversations ADD COLUMN IF NOT EXISTS user_id BIGINT REFERENCES users(id) ON DELETE CASCADE;
+
+CREATE INDEX IF NOT EXISTS conversations_user_id ON conversations (user_id, id DESC);
 
 CREATE TABLE IF NOT EXISTS messages (
     id              BIGSERIAL PRIMARY KEY,

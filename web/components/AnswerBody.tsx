@@ -162,7 +162,7 @@ function Inline({
                   type="button"
                   onClick={() => onCite(c)}
                   title={`${c.title} — page ${c.page_start}`}
-                  className="mx-[1px] inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-accent bg-accent-soft px-1 align-[1px] text-[11px] font-semibold text-accent transition-colors hover:bg-accent hover:text-white"
+                  className="mx-[1px] inline-flex h-5 min-w-5 items-center justify-center rounded border border-accent bg-accent-soft px-1 align-[1px] text-[13px] font-semibold text-accent transition-colors hover:bg-accent hover:text-white"
                 >
                   {marker}
                   <span className="sr-only">

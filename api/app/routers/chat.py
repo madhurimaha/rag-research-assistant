@@ -21,9 +21,10 @@ import json
 import time
 from collections.abc import Iterator
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 
+from app.core.auth import get_current_user
 from app.core.config import get_settings
 from app.db.pool import connection
 from app.rag import generation
@@ -82,17 +83,19 @@ def _persist_traces(conn, message_id: int, candidates: list[Candidate]) -> None:
 
 
 @router.post("/chat/ask")
-def ask(req: AskRequest) -> StreamingResponse:
+def ask(req: AskRequest, user: dict = Depends(get_current_user)) -> StreamingResponse:
     settings = get_settings()
+    user_id = user["id"]
 
     def event_stream() -> Iterator[str]:
         started = time.perf_counter()
         try:
             with connection() as conn:
-                # ---- conversation
+                # ---- conversation (owned by this user)
                 if req.conversation_id:
                     row = conn.execute(
-                        "SELECT id FROM conversations WHERE id = %s", (req.conversation_id,)
+                        "SELECT id FROM conversations WHERE id = %s AND user_id = %s",
+                        (req.conversation_id, user_id),
                     ).fetchone()
                     if not row:
                         yield _sse("error", {"message": "conversation not found"})
@@ -100,8 +103,8 @@ def ask(req: AskRequest) -> StreamingResponse:
                     conversation_id = req.conversation_id
                 else:
                     conversation_id = conn.execute(
-                        "INSERT INTO conversations (title) VALUES (%s) RETURNING id",
-                        (req.question[:120],),
+                        "INSERT INTO conversations (user_id, title) VALUES (%s, %s) RETURNING id",
+                        (user_id, req.question[:120]),
                     ).fetchone()["id"]
 
                 # Recent turns, fetched *before* inserting the current question. Passed to the
@@ -157,6 +160,7 @@ def ask(req: AskRequest) -> StreamingResponse:
                     use_hybrid=req.use_hybrid,
                     use_rerank=req.use_rerank,
                     carry_forward_chunk_ids=prior_chunk_ids,
+                    user_id=user_id,
                 )
 
                 prompt_tokens = generation.count_context_tokens(result.context)
@@ -264,7 +268,7 @@ def ask(req: AskRequest) -> StreamingResponse:
 
 
 @router.get("/chat/{message_id}/explain", response_model=ExplainOut)
-def explain(message_id: int) -> ExplainOut:
+def explain(message_id: int, user: dict = Depends(get_current_user)) -> ExplainOut:
     """Replay how a stored answer was retrieved.
 
     Traces are persisted rather than logged so this works for any historical message, not just
@@ -272,7 +276,13 @@ def explain(message_id: int) -> ExplainOut:
     """
     with connection() as conn:
         message = conn.execute(
-            "SELECT id, conversation_id, content FROM messages WHERE id = %s", (message_id,)
+            """
+            SELECT m.id, m.conversation_id, m.content
+            FROM messages m
+            JOIN conversations c ON c.id = m.conversation_id
+            WHERE m.id = %s AND c.user_id = %s
+            """,
+            (message_id, user["id"]),
         ).fetchone()
         if not message:
             raise HTTPException(404, "message not found")
@@ -329,19 +339,27 @@ def explain(message_id: int) -> ExplainOut:
 
 
 @router.get("/conversations", response_model=list[ConversationOut])
-def list_conversations() -> list[ConversationOut]:
+def list_conversations(user: dict = Depends(get_current_user)) -> list[ConversationOut]:
     with connection() as conn:
         rows = conn.execute(
-            "SELECT id, title, created_at FROM conversations ORDER BY id DESC LIMIT 50"
+            """
+            SELECT id, title, created_at FROM conversations
+            WHERE user_id = %s
+            ORDER BY id DESC LIMIT 50
+            """,
+            (user["id"],),
         ).fetchall()
     return [ConversationOut(**row) for row in rows]
 
 
 @router.get("/conversations/{conversation_id}", response_model=ConversationOut)
-def get_conversation(conversation_id: int) -> ConversationOut:
+def get_conversation(
+    conversation_id: int, user: dict = Depends(get_current_user)
+) -> ConversationOut:
     with connection() as conn:
         convo = conn.execute(
-            "SELECT id, title, created_at FROM conversations WHERE id = %s", (conversation_id,)
+            "SELECT id, title, created_at FROM conversations WHERE id = %s AND user_id = %s",
+            (conversation_id, user["id"]),
         ).fetchone()
         if not convo:
             raise HTTPException(404, "conversation not found")
@@ -356,7 +374,8 @@ def get_conversation(conversation_id: int) -> ConversationOut:
 
         citation_rows = conn.execute(
             """
-            SELECT ct.message_id, ct.marker, ct.chunk_id, c.page_start, c.page_end, c.section,
+            SELECT ct.message_id, ct.marker, ct.chunk_id, d.id AS document_id,
+                   c.page_start, c.page_end, c.section,
                    c.raw_content, d.doc_key, d.title
             FROM citations ct
             JOIN chunks c ON c.id = ct.chunk_id
@@ -374,6 +393,7 @@ def get_conversation(conversation_id: int) -> ConversationOut:
             CitationOut(
                 marker=row["marker"],
                 chunk_id=row["chunk_id"],
+                document_id=row["document_id"],
                 doc_key=row["doc_key"],
                 title=row["title"],
                 page_start=row["page_start"],
