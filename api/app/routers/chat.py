@@ -18,6 +18,7 @@ still writing.
 from __future__ import annotations
 
 import json
+import re
 import time
 from collections.abc import Iterator
 
@@ -45,8 +46,18 @@ router = APIRouter(tags=["chat"])
 HISTORY_TURNS = 2
 
 
+_ABSTRACT_RE = re.compile(r"(?i)\babstract\b[\s:.—–\-]*")
+
+
 def _snippet(text: str, limit: int = 260) -> str:
-    return " ".join(text.split())[:limit]
+    """Quote the body of a chunk, not the author block that often leads page 1."""
+    compact = " ".join(text.split())
+    match = _ABSTRACT_RE.search(compact)
+    if match:
+        rest = compact[match.end() :].lstrip()
+        if len(rest) > 40:
+            compact = rest
+    return compact[:limit]
 
 
 def _sse(event: str, data: dict | str) -> str:
